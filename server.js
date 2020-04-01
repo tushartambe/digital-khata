@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const jwt = require('jsonwebtoken');
 
+const withAuth = require('./middleware');
+
 const EMAIL = "tushar@gmail.com";
 const PASSWORD = "pass";
 const secret = 'mysecretsshhh'; //take it from env
@@ -48,4 +50,8 @@ app.post('/api/authenticate', function (req, res) {
     });
     res.cookie('token', token, {httpOnly: true}).sendStatus(200);
   }
+});
+
+app.get('/checkToken', withAuth, function(req, res) {
+  res.sendStatus(200);
 });

@@ -5,7 +5,13 @@ import './index.css';
 import Login from './pages/Login';
 import * as serviceWorker from './serviceWorker';
 import Signup from './pages/Signup';
+import withAuth from "./withAuth";
 
+const Dashboard = (props) => {
+  return (
+    <h2>DASHBOARD!!!</h2>
+  )
+};
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,7 +19,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/login" component={Login}/>
         <Route path="/signup" component={Signup}/>
-        <Route path="/dashboard" component={e => <h2>DASHBOARD!!!</h2>}/>
+        <Route path="/dashboard" component={withAuth(Dashboard)}/>
       </Switch>
     </Router>
   </React.StrictMode>,
