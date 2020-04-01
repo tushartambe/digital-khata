@@ -11,12 +11,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Switch>
-        <Route exact path="/login">
-          <Login/>
-        </Route>
-        <Route path="/signup">
-          <Signup/>
-        </Route>
+        <Route exact path="/login" component={Login}/>
+        <Route path="/signup" component={Signup}/>
+        <Route path="/dashboard" component={e => <h2>DASHBOARD!!!</h2>}/>
       </Switch>
     </Router>
   </React.StrictMode>,
