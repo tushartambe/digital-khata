@@ -12,6 +12,7 @@ const Input = styled.input.attrs(props => ({
   box-sizing:border-box;
   text-align:center;
   margin: 0.2rem;
-  background-color: ${props => props.type == "info" ? "#5eafff" : "white"};
-`
+  background-color: ${props => props.type == "submit" ? "#0069D9" : "white"};
+  color: ${props => props.type == "submit" ? "white" : ""};
+`;
 export default Input;

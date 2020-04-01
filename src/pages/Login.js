@@ -1,9 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Input from "../components/Input";
-import Button from "../components/Button";
-import { Link, Redirect } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const Wrapper = styled.div`
   width:100vw; 
@@ -19,17 +18,50 @@ const Wrapper = styled.div`
   @media (min-width: 768px) {
     max-width: 400px;
   }
-`
-const Login = (props) => {
-  console.log("Coming in login")
+`;
+
+const Login = ({history}) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    fetch('/api/authenticate', {
+      method: 'POST',
+      body: JSON.stringify({email, password}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          history.push('/dashboard');
+        } else {
+          throw new Error(res.error);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Error logging in please try again');
+      });
+  };
+
   return (
     <Wrapper>
       <Header>Log In</Header>
-      <Input type="email" placeholder="yourmail@domain.com"></Input>
-      <Input type="password" placeholder="your password"></Input>
-      <Input type="Submit"></Input>
-      <span>Don't have an account? <Link to="/c">Create One</Link></span>
+      <form onSubmit={onSubmit}>
+        <Input type="email"
+               placeholder="yourmail@domain.com"
+               value={email}
+               onChange={e => setEmail(e.target.value)}/>
+        <Input type="password"
+               placeholder="your password"
+               value={password}
+               onChange={e => setPassword(e.target.value)}/>
+        <Input type="submit" value="Login"/>
+        <span>Don't have an account? <Link to="/signup">Create One</Link></span>
+      </form>
     </Wrapper>
   );
-}
+};
 export default Login;
