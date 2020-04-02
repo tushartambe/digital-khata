@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Input from "../components/Input";
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setEmail, setName} from "../actions/actions";
 
 const Wrapper = styled.div`
   width:100vw; 
@@ -21,8 +23,9 @@ const Wrapper = styled.div`
 `;
 
 const Login = ({history}) => {
-  const [email, setEmail] = useState("");
+  const [email, SetLocalEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch()
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -39,11 +42,14 @@ const Login = ({history}) => {
         } else {
           throw new Error(res.error);
         }
-      })
-      .catch(err => {
-        console.error(err);
-        alert('Error logging in please try again');
-      });
+        return res.json();
+      }).then(res => {
+      dispatch(setName(res.name));
+      dispatch(setEmail(email));
+    }).catch(err => {
+      console.error(err);
+      alert('Error logging in please try again');
+    });
   };
 
   return (
@@ -53,7 +59,7 @@ const Login = ({history}) => {
         <Input type="email"
                placeholder="yourmail@domain.com"
                value={email}
-               onChange={e => setEmail(e.target.value)}/>
+               onChange={e => SetLocalEmail(e.target.value)}/>
         <Input type="password"
                placeholder="your password"
                value={password}

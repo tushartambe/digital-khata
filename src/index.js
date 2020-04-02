@@ -6,22 +6,22 @@ import Login from './pages/Login';
 import * as serviceWorker from './serviceWorker';
 import Signup from './pages/Signup';
 import withAuth from "./withAuth";
+import Dashboard from "./pages/Dashboard";
 
-const Dashboard = (props) => {
-  return (
-    <h2>DASHBOARD!!!</h2>
-  )
-};
+import {Provider} from 'react-redux';
+import store from './store/store';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Switch>
-        <Route exact path="/login" component={Login}/>
-        <Route path="/signup" component={Signup}/>
-        <Route path="/dashboard" component={withAuth(Dashboard)}/>
-      </Switch>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          <Route exact path="/login" component={Login}/>
+          <Route path="/signup" component={Signup}/>
+          <Route path="/dashboard" component={withAuth(Dashboard)}/>
+        </Switch>
+      </Router>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
