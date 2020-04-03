@@ -19,8 +19,6 @@ const Heading = styled.section`
   margin:2px;
 `;
 
-
-
 const Container = styled.section`
   width:100%;
   height:84%;

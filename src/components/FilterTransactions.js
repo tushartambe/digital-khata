@@ -3,6 +3,9 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "./_override-react-date-picker.css";
 import Label from "./Label";
+import {useDispatch} from "react-redux";
+import {SET_FILTER, setFilter} from "../actions/actions";
+
 
 const FilterButton = styled.button`
   min-width:80px;
@@ -30,6 +33,7 @@ const Filter = styled.section`
 
 const FilterTransactions = (props) => {
   let date = new Date();
+  const dispatch = useDispatch();
   const [startDate, setStartDate] = useState(date.setDate(date.getDate() - 10));
   const [endDate, setEndDate] = useState(new Date());
 
@@ -45,7 +49,7 @@ const FilterTransactions = (props) => {
         className="date"
         selected={endDate}
         onChange={setEndDate}/>
-      <FilterButton>Filter</FilterButton>
+      <FilterButton onClick={() => dispatch(setFilter({startDate, endDate}))}>Filter</FilterButton>
     </Filter>)
 };
 

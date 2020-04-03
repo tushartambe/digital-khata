@@ -10,7 +10,7 @@ import Wrapper from "../components/Wrapper";
 const Login = ({history}) => {
   const [email, SetLocalEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const onSubmit = (event) => {
     event.preventDefault();
