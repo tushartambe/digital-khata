@@ -1,26 +1,11 @@
 import React, {useState} from "react";
-import styled from "styled-components";
 import Header from "../components/Header";
 import Input from "../components/Input";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setEmail, setName} from "../actions/actions";
+import Wrapper from "../components/Wrapper";
 
-const Wrapper = styled.div`
-  width:100vw; 
-  padding:10px 50px; 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  border:1px solid black;
-  box-sizing:border-box;
-  
-  @media (min-width: 768px) {
-    max-width: 400px;
-  }
-`;
 
 const Login = ({history}) => {
   const [email, SetLocalEmail] = useState("");

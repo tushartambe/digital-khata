@@ -1,0 +1,21 @@
+.date {
+    max-width: 130px;
+    height: 100%;
+    font-size: 1rem;
+    text-align: center;
+    box-sizing: border-box;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px 2px 2px 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.react-datepicker__input-container {
+    height: 100%;
+    width: fit-content;
+}
+
+.react-datepicker-wrapper {
+    height: 50%;
+    width: fit-content;
+}
