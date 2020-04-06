@@ -17,8 +17,7 @@ const Label = styled.div`
   border-style: solid;
   border-width:${props => props.type === "info" ? " 2px 0 2px 2px" : "2px 2px 2px 0"};
   border-radius:${props => props.type === "info" ? "5px 0 0 5px" : "0 5px 5px 0"};
-  
-  margin-left:5px;
+  margin-left:${props => props.type === "info" ? "5px" : ""};
 `;
 
 export default Label;

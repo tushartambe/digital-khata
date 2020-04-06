@@ -28,7 +28,17 @@ const Filter = styled.section`
   box-sizing: border-box;
   margin: 2px;
   display: flex;
+  justify-content:space-evenly;
   align-items: center;
+`;
+
+const FilterSection = styled.div`
+  width:40%;
+  height:100%;
+  box-sizing:border-box;
+  display:flex;
+  align-items: center;
+  justify-content:${props => props.type === "left" ? "flex-start" : "flex-end"};
 `;
 
 const FilterTransactions = (props) => {
@@ -39,17 +49,27 @@ const FilterTransactions = (props) => {
 
   return (
     <Filter>
-      <Label type="info">Start date</Label>
-      <DatePicker
-        className="date"
-        selected={startDate}
-        onChange={setStartDate}/>
-      <Label type="info">End date</Label>
-      <DatePicker
-        className="date"
-        selected={endDate}
-        onChange={setEndDate}/>
-      <FilterButton onClick={() => dispatch(setFilter({startDate, endDate}))}>Filter</FilterButton>
+      <FilterSection type="left">
+        <Label type="info">Start date</Label>
+        <DatePicker
+          className="date"
+          selected={startDate}
+          onChange={setStartDate}/>
+        <Label type="info">End date</Label>
+        <DatePicker
+          className="date"
+          selected={endDate}
+          onChange={setEndDate}/>
+        <FilterButton onClick={() => dispatch(setFilter({startDate, endDate}))}>Filter</FilterButton>
+      </FilterSection>
+      <FilterSection>
+        <Label type="info">Expenses</Label>
+        <Label>4000Rs</Label>
+        <Label type="info">Income</Label>
+        <Label>8000Rs</Label>
+        <Label type="info">Balance</Label>
+        <Label>4000Rs</Label>
+      </FilterSection>
     </Filter>)
 };
 
