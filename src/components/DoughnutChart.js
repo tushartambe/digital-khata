@@ -5,18 +5,19 @@ import {useSelector} from "react-redux";
 import {selectExpenses, selectIncome} from "../selectors/selectors";
 
 const ChartArea = styled.section`
-  width:50%;
-  height:100%;
+  width:100%;
+  height:50%;
   display:flex;
   flex-direction: column;
-  align-items:center;
-  justify-content:center;  
+  align-items:center;  
+  justify-content:center;
+  border-top:1px solid gray;
 `;
 
 const Wrap = styled.div`
-width:50%;
-display:flex;
-justify-content : space-evenly;
+  width:50%;
+  display:flex;
+  justify-content : space-evenly;
 `;
 
 const getUniqueData = (transactions) => {
@@ -31,7 +32,7 @@ const getUniqueData = (transactions) => {
   })
 };
 
-const PieChart = (props) => {
+const DoughnutChart = (props) => {
   const expenses = useSelector(selectExpenses);
   const income = useSelector(selectIncome);
   const uniqueExpenses = getUniqueData(expenses);
@@ -100,4 +101,4 @@ const PieChart = (props) => {
   )
 };
 
-export default PieChart;
+export default DoughnutChart;

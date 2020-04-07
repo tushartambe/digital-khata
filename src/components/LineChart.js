@@ -5,12 +5,12 @@ import {useSelector} from "react-redux";
 import {selectExpenses, selectIncome} from "../selectors/selectors";
 
 const ChartArea = styled.section`
-  width:50%;
-  height:100%;
+  width:100%;
+  height:50%;
   display:flex;
   flex-direction: column;
-  align-items:center;
-  justify-content:center;  
+  align-items:center;  
+  justify-content:center;
 `;
 
 const LineChart = () => {
@@ -48,7 +48,7 @@ const LineChart = () => {
           responsive: true,
           title: {
             display: true,
-            text: "Income X Expense",
+            text: "Income vs Expense",
             fontSize: 20
           },
           legend: {
@@ -62,8 +62,8 @@ const LineChart = () => {
                 unit: 'day',
                 tooltipFormat: 'MMM DD'
               },
-              ticks:{
-                source:"auto"
+              ticks: {
+                source: "auto"
               }
             }],
             yAxes: [{

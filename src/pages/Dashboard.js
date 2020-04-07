@@ -4,12 +4,15 @@ import styled from "styled-components";
 import {selectName} from "../selectors/selectors";
 import "react-datepicker/dist/react-datepicker.css";
 import FilterTransactions from "../components/FilterTransactions";
-import PieChart from "../components/PieChart";
+import DoughnutChart from "../components/DoughnutChart";
 import LineChart from "../components/LineChart";
+import TransactionSummary from "../components/TransactionSummary";
+import CategoryList from "../components/CategoryList";
 
 const DashboardWrapper = styled.div`
-  width:100%;
+  width:86%;
   height:100%;
+  margin: 0 auto;
 `;
 
 const Heading = styled.section`
@@ -18,7 +21,6 @@ const Heading = styled.section`
   border:3px solid blue;
   box-sizing:border-box;
   font-size:30px;
-  margin:2px;
 `;
 
 const Container = styled.section`
@@ -26,8 +28,17 @@ const Container = styled.section`
   height:84%;
   border:3px solid blue;
   box-sizing:border-box;
-  margin:2px;
+  margin:0 auto;
   display:flex;
+`;
+
+const ChartArea = styled.section`
+  width:50%;
+  height:100%;
+  display:flex;
+  flex-direction: column;
+  align-items:center;  
+  justify-content:space-evenly;
 `;
 
 const Dashboard = (props) => {
@@ -40,8 +51,12 @@ const Dashboard = (props) => {
       </Heading>
       <FilterTransactions/>
       <Container>
-        <PieChart/>
-        <LineChart/>
+        <TransactionSummary/>
+        <ChartArea>
+          <LineChart/>
+          <DoughnutChart/>
+        </ChartArea>
+        <CategoryList/>
       </Container>
     </DashboardWrapper>
   )

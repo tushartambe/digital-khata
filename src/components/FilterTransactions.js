@@ -26,7 +26,7 @@ const Filter = styled.section`
   height: 8%;
   border: 3px solid purple;
   box-sizing: border-box;
-  margin: 2px;
+  // margin: 2px;
   display: flex;
   justify-content:space-evenly;
   align-items: center;

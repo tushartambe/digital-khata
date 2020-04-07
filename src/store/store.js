@@ -19,6 +19,7 @@ const initialState = {
         amount: 100,
         date:"2020-03-20",
         category: "TV Recharge",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },{
@@ -26,6 +27,7 @@ const initialState = {
         amount: 50,
         date:"2020-03-21",
         category: "TV Recharge",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },{
@@ -33,6 +35,7 @@ const initialState = {
         amount: 560,
         date:"2020-03-22",
         category: "TV Recharge",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
@@ -41,6 +44,7 @@ const initialState = {
         amount: 830,
         date:"2020-03-20",
         category: "Food",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
@@ -49,6 +53,7 @@ const initialState = {
         amount: 200,
         date:"2020-03-20",
         category: "Food",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
@@ -57,6 +62,7 @@ const initialState = {
         amount: 600,
         date:"2020-03-24",
         category: "Salary",
+        type:"income",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
@@ -65,14 +71,16 @@ const initialState = {
         amount: 900,
         date:"2020-02-24",
         category: "Salary",
+        type:"income",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
       {
         id: 2346,
         amount: 900,
-        date:"2019-10-24",
+        date:"2020-01-30",
         category: "Salary",
+        type:"income",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
@@ -81,14 +89,16 @@ const initialState = {
         amount: 990,
         date:"2020-02-24",
         category: "Travel",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
       {
         id: 2346,
         amount: 60,
-        date:"2020-02-25",
+        date:"2020-02-02",
         category: "Travel",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
@@ -97,6 +107,7 @@ const initialState = {
         amount: 900,
         date:"2020-02-28",
         category: "Gifts",
+        type:"expense",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
@@ -105,6 +116,7 @@ const initialState = {
         amount: 900,
         date:"2020-02-24",
         category: "Cachback",
+        type:"income",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
