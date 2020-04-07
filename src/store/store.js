@@ -16,31 +16,129 @@ const initialState = {
     transactions: [
       {
         id: 24324,
-        amount: "200Rs",
-        date: "20/3/2020",
+        amount: 100,
+        date:"2020-03-20",
+        category: "TV Recharge",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },{
+        id: 24314,
+        amount: 50,
+        date:"2020-03-21",
+        category: "TV Recharge",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },{
+        id: 242,
+        amount: 560,
+        date:"2020-03-22",
         category: "TV Recharge",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
       },
       {
-        id: 2345,
-        amount: "200Rs",
-        date: "20/3/2020",
-        category: "TV Recharge",
+        id: 242,
+        amount: 830,
+        date:"2020-03-20",
+        category: "Food",
         description: "recharge for person 1",
         receipt: "https://images/23/jsgf.jpg"
-      }
+      },
+      {
+        id: 242,
+        amount: 200,
+        date:"2020-03-20",
+        category: "Food",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
+      {
+        id: 2345,
+        amount: 600,
+        date:"2020-03-24",
+        category: "Salary",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
+      {
+        id: 2346,
+        amount: 900,
+        date:"2020-02-24",
+        category: "Salary",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
+      {
+        id: 2346,
+        amount: 900,
+        date:"2019-10-24",
+        category: "Salary",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
+      {
+        id: 2346,
+        amount: 990,
+        date:"2020-02-24",
+        category: "Travel",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
+      {
+        id: 2346,
+        amount: 60,
+        date:"2020-02-25",
+        category: "Travel",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
+      {
+        id: 2346,
+        amount: 900,
+        date:"2020-02-28",
+        category: "Gifts",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
+      {
+        id: 2346,
+        amount: 900,
+        date:"2020-02-24",
+        category: "Cachback",
+        description: "recharge for person 1",
+        receipt: "https://images/23/jsgf.jpg"
+      },
     ]
   },
   categories: [
     {
-      name: "TV recharge",
+      name: "TV Recharge",
       type: "expense",
       emoji: "#&23667;"
     },
     {
       name: "Salary",
-      type: "Income",
+      type: "income",
+      emoji: "#&23667;"
+    },
+    {
+      name: "Food",
+      type: "expense",
+      emoji: "#&23667;"
+    },
+    {
+      name: "Travel",
+      type: "expense",
+      emoji: "#&23667;"
+    },
+    {
+      name: "Gifts",
+      type: "expense",
+      emoji: "#&23667;"
+    },
+    {
+      name: "Cachback",
+      type: "income",
       emoji: "#&23667;"
     }
   ]

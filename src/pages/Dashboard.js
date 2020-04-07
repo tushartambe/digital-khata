@@ -4,6 +4,8 @@ import styled from "styled-components";
 import {selectName} from "../selectors/selectors";
 import "react-datepicker/dist/react-datepicker.css";
 import FilterTransactions from "../components/FilterTransactions";
+import PieChart from "../components/PieChart";
+import LineChart from "../components/LineChart";
 
 const DashboardWrapper = styled.div`
   width:100%;
@@ -25,6 +27,7 @@ const Container = styled.section`
   border:3px solid blue;
   box-sizing:border-box;
   margin:2px;
+  display:flex;
 `;
 
 const Dashboard = (props) => {
@@ -36,7 +39,10 @@ const Dashboard = (props) => {
         Hello {name}
       </Heading>
       <FilterTransactions/>
-      <Container/>
+      <Container>
+        <PieChart/>
+        <LineChart/>
+      </Container>
     </DashboardWrapper>
   )
 };
