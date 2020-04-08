@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-import Input from "../components/Input";
+import {Input} from "../components/Input";
 import { Link } from "react-router-dom";
 import Wrapper  from "../components/Wrapper";
 

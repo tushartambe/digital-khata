@@ -1,22 +1,17 @@
 import React, {useState} from "react";
-import Input from "./Input";
 import Select from "react-select";
-import {PopupWrapper} from "./PopupWrapper";
+import {PopupWrapper} from "../PopupWrapper";
 import styled from "styled-components";
-import "./TransactionPopup.css"
-import Header from "./Header";
-
-const PopUpInput = styled(Input)`
-    font-size: 1rem;
-    font-weight: 400;
-`;
+import "../transaction/TransactionPopup.css"
+import Header from "../Header";
+import {PopUpInput} from "../Input";
 
 const Alert = styled.div`
     height: 30px;
     width: 100%;
     box-sizing:border-box;
     text-align:center;
-`
+`;
 
 const CategoryPopup = () => {
   const [category, setCategory] = useState("")
@@ -35,7 +30,7 @@ const CategoryPopup = () => {
   setCategory("");
   setType(null);
   setDone("Your category is saved successfully");
-  }
+  };
 
   return (<PopupWrapper onFocus={() => setDone("")}>
     <Header>Category Details</Header>

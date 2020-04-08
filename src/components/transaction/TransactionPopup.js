@@ -1,14 +1,14 @@
 import React, {useState} from "react";
-import Input from "./Input";
+import {PopUpInput} from "../Input";
 import Select from 'react-select';
 import {useSelector} from "react-redux";
-import "./_override-react-date-picker.css"
-import "./TransactionPopup.css"
+import "../_override-react-date-picker.css"
+import "../transaction/TransactionPopup.css"
 import DatePicker from "react-datepicker/es";
-import {selectCategories} from "../selectors/selectors";
-import {PopupWrapper} from "./PopupWrapper";
+import {selectCategories} from "../../selectors/selectors";
+import {PopupWrapper} from "../PopupWrapper";
 import styled from "styled-components";
-import Header from "./Header";
+import Header from "../Header";
 
 const Alert = styled.div`
     height: 30px;
@@ -16,12 +16,6 @@ const Alert = styled.div`
     box-sizing:border-box;
     text-align:center;
 `;
-
-const PopUpInput = styled(Input)`
-    font-size: 1rem;
-    font-weight: 400;
-`;
-
 
 const TransactionPopup = () => {
   const [description, setDescription] = useState("");
@@ -97,9 +91,9 @@ const TransactionPopup = () => {
       options={categoriesToShow}/> : ""}
 
     <PopUpInput type="text"
-           placeholder="note (optional) "
-           value={description}
-           onChange={e => setDescription(e.target.value)}
+                placeholder="note (optional) "
+                value={description}
+                onChange={e => setDescription(e.target.value)}
     />
 
     <PopUpInput type="submit" value="Add transaction" onClick={() => {

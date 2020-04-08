@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Input = styled.input.attrs(props => ({
+export const Input = styled.input.attrs(props => ({
   type: props.type
 }))`
   width:100%;
@@ -17,4 +17,7 @@ const Input = styled.input.attrs(props => ({
   color: ${props => props.type == "submit" ? "white" : ""};
 `;
 
-export default Input;
+export const PopUpInput = styled(Input)`
+    font-size: 1rem;
+    font-weight: 400;
+`;

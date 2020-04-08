@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
 import {useSelector} from "react-redux";
-import {selectTransactions} from "../selectors/selectors";
-import Header from "./Header";
+import {selectTransactions} from "../../selectors/selectors";
+import Header from "../Header";
 import TransactionPopup from "./TransactionPopup";
-import Modal from "./Modal";
+import Modal from "../Modal";
 
 const ChartArea = styled.section`
   width:30%;

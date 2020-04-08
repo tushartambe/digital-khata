@@ -4,10 +4,10 @@ import styled from "styled-components";
 import {selectName} from "../selectors/selectors";
 import "react-datepicker/dist/react-datepicker.css";
 import FilterTransactions from "../components/FilterTransactions";
-import DoughnutChart from "../components/DoughnutChart";
-import LineChart from "../components/LineChart";
-import TransactionSummary from "../components/TransactionSummary";
-import CategoryList from "../components/CategoryList";
+import DoughnutChart from "../components/charts/DoughnutChart";
+import LineChart from "../components/charts/LineChart";
+import TransactionSummary from "../components/transaction/TransactionSummary";
+import CategoryList from "../components/category/CategoryList";
 
 const DashboardWrapper = styled.div`
   width:86%;

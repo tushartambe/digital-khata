@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "./_override-react-date-picker.css";
 import Label from "./Label";
 import {useDispatch} from "react-redux";
-import {SET_FILTER, setFilter} from "../actions/actions";
+import {setFilter} from "../actions/actions";
 
 
 const FilterButton = styled.button`

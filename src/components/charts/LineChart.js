@@ -2,7 +2,7 @@ import styled from "styled-components";
 import React from "react";
 import {Line} from "react-chartjs-2";
 import {useSelector} from "react-redux";
-import {selectExpenses, selectIncome} from "../selectors/selectors";
+import {selectExpenses, selectIncome} from "../../selectors/selectors";
 
 const ChartArea = styled.section`
   width:100%;

@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from "styled-components";
-import {useSelector} from "react-redux";
-import {selectCategories} from "../selectors/selectors";
-import Header from "./Header";
-import Modal from "./Modal";
+import Header from "../Header";
+import Modal from "../Modal";
 import CategoryPopup from "./CategoryPopup";
+import {selectCategories} from "../../selectors/selectors";
+import {useSelector} from "react-redux";
 
 const ChartArea = styled.section`
   width:20%;
