@@ -1,0 +1,24 @@
+.selector {
+    width: 100%;
+    margin: 5px;
+}
+
+.css-yk16xz-control {
+    width:100%;
+}
+
+.css-1pahdxg-control {
+    width:100%;
+}
+
+.form-date  {
+    width:290px;
+    height: 30px;
+    text-align: center;
+}
+
+.react-datepicker-wrapper{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}

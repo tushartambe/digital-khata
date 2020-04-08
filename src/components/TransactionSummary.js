@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {selectTransactions} from "../selectors/selectors";
 import Header from "./Header";
+import TransactionPopup from "./TransactionPopup";
 
 const ChartArea = styled.section`
   width:30%;
@@ -10,6 +11,8 @@ const ChartArea = styled.section`
   
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   
   border:3px solid blue;
   overflow-y: auto;
@@ -46,15 +49,20 @@ const Transaction = styled.div`
 `;
 
 
-
 const TransactionSummary = (props) => {
   const transactions = useSelector(selectTransactions);
+  const [showPopup, setShowPopup] = useState(true);
+
   return (
     <ChartArea>
+      {showPopup ? <TransactionPopup/> : ""}
       <Transactions>
-        <Header>Transactions</Header>
+        <Header>Transactions <span> {showPopup ? <button onClick={() => setShowPopup(false)}>hide</button> :
+          <button onClick={() => setShowPopup(true)}>add</button>}</span>
+        </Header>
         {transactions.map(t => (
-          <Transaction type={t.type}><span>{t.date}</span> <span>{t.category}</span> <span>{t.type === "expense" ? "- " : "+ " }{t.amount}</span></Transaction>))}
+          <Transaction type={t.type}><span>{t.date}</span> <span>{t.category}</span>
+            <span>{t.type === "expense" ? "- " : "+ "}{t.amount}</span></Transaction>))}
       </Transactions>
     </ChartArea>
   )

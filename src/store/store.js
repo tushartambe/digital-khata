@@ -149,7 +149,7 @@ const initialState = {
       emoji: "#&23667;"
     },
     {
-      name: "Cachback",
+      name: "Cashback",
       type: "income",
       emoji: "#&23667;"
     }
