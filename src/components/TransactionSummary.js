@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {selectTransactions} from "../selectors/selectors";
 import Header from "./Header";
 import TransactionPopup from "./TransactionPopup";
+import Modal from "./Modal";
 
 const ChartArea = styled.section`
   width:30%;
@@ -55,11 +56,9 @@ const TransactionSummary = (props) => {
 
   return (
     <ChartArea>
-      {showPopup ? <TransactionPopup/> : ""}
       <Transactions>
-        <Header>Transactions <span> {showPopup ? <button onClick={() => setShowPopup(false)}>hide</button> :
-          <button onClick={() => setShowPopup(true)}>add</button>}</span>
-        </Header>
+        <Header>Transactions</Header>
+        <Modal><TransactionPopup/></Modal>
         {transactions.map(t => (
           <Transaction type={t.type}><span>{t.date}</span> <span>{t.category}</span>
             <span>{t.type === "expense" ? "- " : "+ "}{t.amount}</span></Transaction>))}

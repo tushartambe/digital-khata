@@ -1,24 +1,41 @@
 .selector {
     width: 100%;
-    margin: 5px;
+    margin: 0.2rem
 }
 
 .css-yk16xz-control {
     width:100%;
+    font-size: 1rem;
 }
 
 .css-1pahdxg-control {
     width:100%;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.css-2b097c-container {
+    font-size: 1rem;
+    font-weight: 400;
 }
 
 .form-date  {
-    width:290px;
-    height: 30px;
-    text-align: center;
+    height: 38px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #dfe3e6;
+    box-sizing:border-box;
+    text-align:center;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.react-datepicker__input-container {
+    width: 100%;
+    display: flex;
 }
 
 .react-datepicker-wrapper{
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
 }
