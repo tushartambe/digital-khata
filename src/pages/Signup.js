@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Header from "../components/Header";
 import {Input} from "../components/Input";
-import { Link } from "react-router-dom";
-import Wrapper  from "../components/Wrapper";
+import {Link} from "react-router-dom";
+import Wrapper from "../components/Wrapper";
 
-const Signup = ({ history }) => {
+const Signup = ({history}) => {
   const [email, setLocalEmail] = useState("");
   const [name, setLocalName] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +17,7 @@ const Signup = ({ history }) => {
     } else {
       fetch('/api/signup', {
         method: 'POST',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({name, email, password}),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -46,21 +46,21 @@ const Signup = ({ history }) => {
                onChange={e => setLocalName(e.target.value)}
         />
         <Input type="email"
-          placeholder="yourmail@domain.com"
-          value={email}
-          onChange={e => setLocalEmail(e.target.value)}
+               placeholder="yourmail@domain.com"
+               value={email}
+               onChange={e => setLocalEmail(e.target.value)}
         />
         <Input type="password"
-          placeholder="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
+               placeholder="password"
+               value={password}
+               onChange={e => setPassword(e.target.value)}
         />
         <Input type="password"
-          placeholder="confirm password"
-          value={confirmPassword}
-          onChange={e => setConfirmPassword(e.target.value)}
+               placeholder="confirm password"
+               value={confirmPassword}
+               onChange={e => setConfirmPassword(e.target.value)}
         />
-        <Input type="submit" value="Create Account" />
+        <Input type="submit" value="Create Account"/>
         <span>Already have an account? <Link exact to="/login">Log in</Link></span>
       </form>
     </Wrapper>
