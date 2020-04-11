@@ -6,7 +6,9 @@ const saltRounds = 10;
 const UserSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true},
   name: {type: String, required: true},
-  password: {type: String, required: true}
+  password: {type: String, required: true},
+  categories: [],
+  transactions: []
 });
 
 UserSchema.pre('save', function (next) {
@@ -33,6 +35,6 @@ UserSchema.methods.isCorrectPassword = function (password, callback) {
       callback(err, same);
     }
   });
-}
+};
 
 module.exports = mongoose.model('User', UserSchema);

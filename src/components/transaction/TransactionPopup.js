@@ -5,7 +5,7 @@ import {useSelector} from "react-redux";
 import "../_override-react-date-picker.css"
 import "../transaction/TransactionPopup.css"
 import DatePicker from "react-datepicker/es";
-import {selectCategories} from "../../selectors/selectors";
+import {selectCategories, selectEmail} from "../../selectors/selectors";
 import {PopupWrapper} from "../PopupWrapper";
 import styled from "styled-components";
 import Header from "../Header";
@@ -19,13 +19,14 @@ const Alert = styled.div`
 
 const TransactionPopup = () => {
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState(null);
+  const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
   const categories = useSelector(selectCategories);
   const [type, setType] = useState(null);
   const [category, setCategory] = useState(null);
   const [categoriesToShow, setShowableCategories] = useState(null);
   const [isDone, setDone] = useState(false);
+  const email = useSelector(selectEmail);
 
   const types = [
     {value: 'income', label: 'Income'},
@@ -39,13 +40,35 @@ const TransactionPopup = () => {
     return categoriesToShow;
   };
 
-  const addTransaction = () => {
-    return (amount && date && type && category)
+  const addTransaction = (event) => {
+    event.preventDefault();
+    fetch('/api/add-transaction', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: email,
+        amount: amount,
+        date: date,
+        type: type.value,
+        category: category.value,
+        description: description
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      console.log(res);
+      if (res.status !== 200) {
+        throw new Error(res.error);
+      }
+    }).catch(err => {
+      console.error(err);
+      alert('Error adding Transaction. Please try again.');
+    });
   };
 
   const resetLocalState = () => {
     setDate(new Date);
-    setType(type[0]);
+    setType(types[0]);
     setCategory(categoriesToShow[0]);
     setAmount(0);
     setDone("Your transaction is successful");
@@ -96,8 +119,13 @@ const TransactionPopup = () => {
                 onChange={e => setDescription(e.target.value)}
     />
 
-    <PopUpInput type="submit" value="Add transaction" onClick={() => {
-      addTransaction() ? resetLocalState() : setDone("Something is missing");
+    <PopUpInput type="submit" value="Add transaction" onClick={(event) => {
+      if (amount && date && type && category) {
+        addTransaction(event);
+        resetLocalState();
+      } else {
+        setDone("Something is missing");
+      }
     }}/>
 
   </PopupWrapper>

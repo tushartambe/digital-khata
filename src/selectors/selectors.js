@@ -1,4 +1,5 @@
 export const selectName = state => state.name;
+export const selectEmail = state => state.email;
 
 export const selectTransactions = state => {
   const transactions = state.transactions.transactions;

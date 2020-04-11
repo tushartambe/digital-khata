@@ -5,6 +5,8 @@ const path = require("path");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('./models/User');
+const Category = require('./models/Category');
+const Transaction = require('./models/Transaction');
 
 const withAuth = require('./middleware');
 const secret = 'mysecretsshhh'; //take it from env
@@ -91,6 +93,111 @@ app.post('/api/authenticate', function (req, res) {
           res.status(200).cookie('token', token, {httpOnly: true}).json({name: "Tushar"});
         }
       });
+    }
+  });
+});
+
+const createCategory = function (userId, category) {
+  return Category.create(category).then(docImage => {
+    return User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          categories: {
+            _id: docImage._id,
+            name: docImage.name,
+            type: docImage.type,
+            emoji: docImage.emoji,
+            createdAt: docImage.createdAt
+          }
+        }
+      },
+      {new: true, useFindAndModify: false}
+    );
+  });
+};
+
+app.post('/api/add-category', function (req, res) {
+  const {type, name, emoji, email} = req.body;
+  // const category = new Category({type, name, emoji});
+  User.findOne({email}, function (err, user) {
+    if (err) {
+      console.error(err);
+      res.status(500)
+        .json({
+          error: 'Internal error please try again'
+        });
+    } else if (!user) {
+      res.status(401)
+        .json({
+          error: 'Incorrect email or password'
+        });
+    } else {
+      createCategory(user._id, {
+        name: name,
+        type: type,
+        emoji: emoji,
+        createdAt: Date.now()
+      });
+      res.sendStatus(200);
+    }
+  });
+});
+
+const createTransaction = function (userId, transaction) {
+  return Transaction.create(transaction).then(docImage => {
+    return User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          transactions: {
+            _id: docImage._id,
+            amount: docImage.amount,
+            date: docImage.date,
+            type: docImage.type,
+            category: docImage.category,
+            description: docImage.description,
+            createdAt: docImage.createdAt
+          }
+        }
+      },
+      {new: true, useFindAndModify: false}
+    );
+  });
+};
+
+app.post('/api/add-transaction', function (req, res) {
+  const {
+    email,
+    amount,
+    date,
+    type,
+    category,
+    description
+  } = req.body;
+
+  User.findOne({email}, function (err, user) {
+    if (err) {
+      console.error(err);
+      res.status(500)
+        .json({
+          error: 'Internal error please try again'
+        });
+    } else if (!user) {
+      res.status(401)
+        .json({
+          error: 'Incorrect email or password'
+        });
+    } else {
+      createTransaction(user._id, {
+        amount: amount,
+        date: new Date(date),
+        type: type,
+        category: category,
+        description: description,
+        createdAt: Date.now()
+      });
+      res.sendStatus(200);
     }
   });
 });

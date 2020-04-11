@@ -67,8 +67,9 @@ const CategoryList = (props) => {
       <Header>Categories</Header>
       <Modal> <CategoryPopup/></Modal>
       <Categories>
-        {categories.map(c => <Category
-          type={c.type}><Symbol>{c.type === "expense" ? "🎁" : "💰"}</Symbol><span>{c.name}</span></Category>)}
+        {categories.map((c, i) => <Category
+          type={c.type}
+          key={i}><Symbol>{c.type === "expense" ? "🎁" : "💰"}</Symbol><span>{c.name}</span></Category>)}
       </Categories>
     </ChartArea>
   )

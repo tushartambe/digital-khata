@@ -59,8 +59,8 @@ const TransactionSummary = (props) => {
       <Transactions>
         <Header>Transactions</Header>
         <Modal><TransactionPopup/></Modal>
-        {transactions.map(t => (
-          <Transaction type={t.type}><span>{t.date}</span> <span>{t.category}</span>
+        {transactions.map((t,i) => (
+          <Transaction type={t.type} key={i}><span>{t.date}</span> <span>{t.category}</span>
             <span>{t.type === "expense" ? "- " : "+ "}{t.amount}</span></Transaction>))}
       </Transactions>
     </ChartArea>
