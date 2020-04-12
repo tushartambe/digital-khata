@@ -5,8 +5,8 @@ import styled from "styled-components";
 import "../transaction/TransactionPopup.css"
 import Header from "../Header";
 import {PopUpInput} from "../Input";
-import {setEmail, setName} from "../../actions/actions";
-import {useSelector} from "react-redux";
+import {setCategories, setEmail, setName, setTransactions} from "../../actions/actions";
+import {useDispatch, useSelector} from "react-redux";
 import {selectEmail} from "../../selectors/selectors";
 
 const Alert = styled.div`
@@ -21,10 +21,34 @@ const CategoryPopup = ({history}) => {
   const [type, setType] = useState(null);
   const [isDone, setDone] = useState(false);
   const email = useSelector(selectEmail);
+  const dispatch = useDispatch();
   const types = [
     {value: 'income', label: 'Income'},
     {value: 'expense', label: 'Expense'},
   ];
+
+  const updateCategories = () => {
+    fetch('/api/get-categories', {
+      method: 'POST',
+      body: JSON.stringify({email}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      if (res.status === 200) {
+      } else {
+        throw new Error(res.error);
+      }
+      return res.json();
+    }).then(res => {
+      dispatch(setName(res.name));
+      dispatch(setEmail(res.email));
+      dispatch(setCategories(res.categories));
+    }).catch(err => {
+      console.error(err);
+      alert('Some Error. Refresh the page');
+    })
+  };
 
   const addCategory = (event) => {
     event.preventDefault();
@@ -35,9 +59,10 @@ const CategoryPopup = ({history}) => {
         'Content-Type': 'application/json'
       }
     }).then(res => {
-      console.log(res);
       if (res.status !== 200) {
         throw new Error(res.error);
+      } else {
+        updateCategories();
       }
     }).catch(err => {
       console.error(err);

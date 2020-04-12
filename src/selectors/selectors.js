@@ -4,7 +4,7 @@ export const selectEmail = state => state.email;
 export const selectTransactions = state => {
   const transactions = state.transactions.transactions;
   return transactions.sort(function (a, b) {
-    return  new Date(b.date) - new Date(a.date);
+    return new Date(b.date) - new Date(a.date);
   });
 };
 
@@ -19,3 +19,7 @@ export const selectIncome = state => {
 };
 
 export const selectCategories = state => state.categories;
+
+export const selectFilterDates = state => {
+  return state.transactions.filter;
+};

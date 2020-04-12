@@ -26,7 +26,6 @@ export const setFilter = (filter) => {
 };
 
 export const setCategories = (categories) => {
-  console.log("CAT",categories)
   return {
     type: SET_CATEGORIES,
     categories
@@ -34,7 +33,6 @@ export const setCategories = (categories) => {
 };
 
 export const setTransactions = (transactions) => {
-  console.log("TAN",transactions)
   return {
     type: SET_TRANSACTIONS,
     transactions

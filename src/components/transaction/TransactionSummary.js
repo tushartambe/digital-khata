@@ -52,14 +52,13 @@ const Transaction = styled.div`
 
 const TransactionSummary = (props) => {
   const transactions = useSelector(selectTransactions);
-  const [showPopup, setShowPopup] = useState(true);
 
   return (
     <ChartArea>
       <Transactions>
         <Header>Transactions</Header>
         <Modal><TransactionPopup/></Modal>
-        {transactions.map((t,i) => (
+        {transactions.map((t, i) => (
           <Transaction type={t.type} key={i}><span>{t.date}</span> <span>{t.category}</span>
             <span>{t.type === "expense" ? "- " : "+ "}{t.amount}</span></Transaction>))}
       </Transactions>

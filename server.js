@@ -119,7 +119,6 @@ const createCategory = function (userId, category) {
 
 app.post('/api/add-category', function (req, res) {
   const {type, name, emoji, email} = req.body;
-  // const category = new Category({type, name, emoji});
   User.findOne({email}, function (err, user) {
     if (err) {
       console.error(err);
@@ -207,9 +206,6 @@ const getInitialUserData = (email, req, res) => {
   const startDate = new Date(date.setDate(date.getDate() - 10));
   const endDate = new Date();
 
-  let details = {};
-  email = "tushar@gmail.com";
-
   User.aggregate([
     {$match: {email: email}},
     {
@@ -233,20 +229,60 @@ const getInitialUserData = (email, req, res) => {
     }
   ]).exec((err, data) => {
     if (err) throw err;
-    details = data[0];
     res.status(200).json(data[0]);
   });
-  return details;
 };
 
 app.post("/api/get-initial-data", function (req, res) {
   const {email} = req.body;
-  console.log(req.body, "*********");
-  const data = getInitialUserData(email, req, res);
-  console.log(data, "*********");
-  // res.status(200).json(data);
+  getInitialUserData(email, req, res);
 });
 
+app.post("/api/get-transactions", function (req, res) {
+  const {email, startDate, endDate} = req.body;
+  User.aggregate([
+    {$match: {email: email}},
+    {
+      "$project": {
+        "email": "$email",
+        "name": "$name",
+        "transactions": {
+          "$filter": {
+            "input": "$transactions",
+            "as": "transaction",
+            "cond": {
+              "$and": [
+                {"$gte": ["$$transaction.date", new Date(startDate)]},
+                {"$lte": ["$$transaction.date", new Date(endDate)]}
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]).exec((err, data) => {
+    if (err) throw err;
+    res.status(200).json(data[0]);
+  });
+});
+
+
+app.post("/api/get-categories", function (req, res) {
+  const {email} = req.body;
+  User.aggregate([
+    {$match: {email: email}},
+    {
+      "$project": {
+        "email": "$email",
+        "name": "$name",
+        "categories": "$categories"
+      }
+    }
+  ]).exec((err, data) => {
+    if (err) throw err;
+    res.status(200).json(data[0]);
+  });
+});
 app.get('/checkToken', withAuth, function (req, res) {
   res.sendStatus(200);
 });

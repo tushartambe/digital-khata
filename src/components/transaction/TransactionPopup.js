@@ -1,14 +1,15 @@
 import React, {useState} from "react";
 import {PopUpInput} from "../Input";
 import Select from 'react-select';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import "../_override-react-date-picker.css"
 import "../transaction/TransactionPopup.css"
 import DatePicker from "react-datepicker/es";
-import {selectCategories, selectEmail} from "../../selectors/selectors";
+import {selectCategories, selectEmail, selectFilterDates} from "../../selectors/selectors";
 import {PopupWrapper} from "../PopupWrapper";
 import styled from "styled-components";
 import Header from "../Header";
+import {setEmail, setName, setTransactions} from "../../actions/actions";
 
 const Alert = styled.div`
     height: 30px;
@@ -27,7 +28,8 @@ const TransactionPopup = () => {
   const [categoriesToShow, setShowableCategories] = useState(null);
   const [isDone, setDone] = useState(false);
   const email = useSelector(selectEmail);
-
+  const filterDates = useSelector(selectFilterDates);
+  const dispatch = useDispatch();
   const types = [
     {value: 'income', label: 'Income'},
     {value: 'expense', label: 'Expense'},
@@ -38,6 +40,30 @@ const TransactionPopup = () => {
     let categoriesToShow = [];
     applicableCategories.forEach(category => categoriesToShow.push({value: category.name, label: category.name}));
     return categoriesToShow;
+  };
+
+  const updateTransactions = () => {
+    fetch('/api/get-transactions', {
+      method: 'POST',
+      body: JSON.stringify({email: email, startDate: filterDates.startDate, endDate: filterDates.endDate}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      if (res.status === 200) {
+      } else {
+        throw new Error(res.error);
+      }
+      return res.json();
+    }).then(res => {
+      dispatch(setName(res.name));
+      dispatch(setEmail(res.email));
+      dispatch(setTransactions(res.transactions));
+      console.log(res.transactions, "THESE ARE COMING");
+    }).catch(err => {
+      console.error(err);
+      alert('Some Error. Refresh the page');
+    })
   };
 
   const addTransaction = (event) => {
@@ -56,12 +82,12 @@ const TransactionPopup = () => {
         'Content-Type': 'application/json'
       }
     }).then(res => {
-      console.log(res);
       if (res.status !== 200) {
         throw new Error(res.error);
+      } else {
+        updateTransactions();
       }
     }).catch(err => {
-      console.error(err);
       alert('Error adding Transaction. Please try again.');
     });
   };

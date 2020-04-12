@@ -29,7 +29,7 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         transactions: {
-          ...state.filter,
+          ...state.transactions,
           transactions: action.transactions
         }
       };

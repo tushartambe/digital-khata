@@ -62,7 +62,6 @@ const Dashboard = (props) => {
       }
       return res.json();
     }).then(res => {
-      console.log(res);
       dispatch(setName(res.name));
       dispatch(setEmail(res.email));
       dispatch(setCategories(res.categories));
@@ -70,7 +69,8 @@ const Dashboard = (props) => {
       setLoading(false);
     }).catch(err => {
       console.error(err);
-      alert('Error logging in please try again');
+      alert('Unknown Error. Refresh The Page');
+      // window.location.href = "http://localhost:3000/"
     })
   });
 
