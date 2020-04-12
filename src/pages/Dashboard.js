@@ -1,13 +1,14 @@
-import React from 'react';
-import {useSelector} from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
-import {selectName} from "../selectors/selectors";
+import {selectEmail, selectName} from "../selectors/selectors";
 import "react-datepicker/dist/react-datepicker.css";
 import FilterTransactions from "../components/FilterTransactions";
 import DoughnutChart from "../components/charts/DoughnutChart";
 import LineChart from "../components/charts/LineChart";
 import TransactionSummary from "../components/transaction/TransactionSummary";
 import CategoryList from "../components/category/CategoryList";
+import {setCategories, setEmail, setName, setTransactions} from "../actions/actions";
 
 const DashboardWrapper = styled.div`
   width:86%;
@@ -43,8 +44,38 @@ const ChartArea = styled.section`
 
 const Dashboard = (props) => {
   const name = useSelector(selectName);
+  const [loading, setLoading] = useState(true);
+  const email = useSelector(selectEmail);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetch('/api/get-initial-data', {
+      method: 'POST',
+      body: JSON.stringify({email}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      if (res.status === 200) {
+      } else {
+        throw new Error(res.error);
+      }
+      return res.json();
+    }).then(res => {
+      console.log(res);
+      dispatch(setName(res.name));
+      dispatch(setEmail(res.email));
+      dispatch(setCategories(res.categories));
+      dispatch(setTransactions(res.transactions));
+      setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      alert('Error logging in please try again');
+    })
+  });
 
   return (
+    !loading &&
     <DashboardWrapper>
       <Heading>
         Hello {name}

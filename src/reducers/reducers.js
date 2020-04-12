@@ -1,4 +1,4 @@
-import {SET_EMAIL, SET_FILTER, SET_NAME} from "../actions/actions";
+import {SET_CATEGORIES, SET_EMAIL, SET_FILTER, SET_NAME, SET_TRANSACTIONS} from "../actions/actions";
 
 const initialState = {};
 
@@ -9,11 +9,13 @@ function rootReducer(state = initialState, action) {
         ...state,
         name: action.name
       };
+
     case SET_EMAIL:
       return {
         ...state,
         email: action.email
       };
+
     case SET_FILTER :
       return {
         ...state,
@@ -22,6 +24,22 @@ function rootReducer(state = initialState, action) {
           filter: action.filter
         }
       };
+
+    case SET_TRANSACTIONS :
+      return {
+        ...state,
+        transactions: {
+          ...state.filter,
+          transactions: action.transactions
+        }
+      };
+
+    case SET_CATEGORIES:
+      return {
+        ...state,
+        categories: action.categories
+      };
+
     default:
       return state;
   }

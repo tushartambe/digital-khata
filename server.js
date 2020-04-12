@@ -202,6 +202,51 @@ app.post('/api/add-transaction', function (req, res) {
   });
 });
 
+const getInitialUserData = (email, req, res) => {
+  const date = new Date();
+  const startDate = new Date(date.setDate(date.getDate() - 10));
+  const endDate = new Date();
+
+  let details = {};
+  email = "tushar@gmail.com";
+
+  User.aggregate([
+    {$match: {email: email}},
+    {
+      "$project": {
+        "email": "$email",
+        "name": "$name",
+        "categories": "$categories",
+        "transactions": {
+          "$filter": {
+            "input": "$transactions",
+            "as": "transaction",
+            "cond": {
+              "$and": [
+                {"$gte": ["$$transaction.date", startDate]},
+                {"$lte": ["$$transaction.date", endDate]}
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]).exec((err, data) => {
+    if (err) throw err;
+    details = data[0];
+    res.status(200).json(data[0]);
+  });
+  return details;
+};
+
+app.post("/api/get-initial-data", function (req, res) {
+  const {email} = req.body;
+  console.log(req.body, "*********");
+  const data = getInitialUserData(email, req, res);
+  console.log(data, "*********");
+  // res.status(200).json(data);
+});
+
 app.get('/checkToken', withAuth, function (req, res) {
   res.sendStatus(200);
 });

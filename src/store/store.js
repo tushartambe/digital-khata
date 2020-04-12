@@ -7,7 +7,6 @@ const startDate = new Date(date.setDate(date.getDate() - 10));
 const initialState = {
   name: "Captain Jack Sparrow",
   email: "pirates@caribbean.com",
-
   transactions: {
     filter: {
           startDate: startDate,
