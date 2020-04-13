@@ -44,4 +44,4 @@ export const selectUniqueExpenses = state => {
 export const selectUniqueIncome = state => {
   const income = selectIncome(state);
   return getUniqueData(income);
-}
+};

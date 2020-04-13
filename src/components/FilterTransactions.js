@@ -5,7 +5,7 @@ import "./_override-react-date-picker.css";
 import Label from "./Label";
 import {useDispatch, useSelector} from "react-redux";
 import {setEmail, setFilter, setName, setTransactions} from "../actions/actions";
-import {selectEmail, selectFilterDates} from "../selectors/selectors";
+import {selectEmail, selectExpenses, selectFilterDates, selectIncome, selectTransactions} from "../selectors/selectors";
 
 
 const FilterButton = styled.button`
@@ -49,6 +49,13 @@ const FilterTransactions = (props) => {
   const [startDate, setStartDate] = useState(filterDates.startDate);
   const [endDate, setEndDate] = useState(filterDates.endDate);
   const email = useSelector(selectEmail);
+
+  const transactions = useSelector(selectTransactions);
+  const getSummary = ({expense, income}, transaction) => {
+    transaction.type === "expense" ? expense += transaction.amount : income += transaction.amount;
+    return {expense, income};
+  };
+  let {expense, income} = transactions.reduce(getSummary, {expense: 0, income: 0});
 
   const updatFilters = (event) => {
     event.preventDefault();
@@ -99,11 +106,11 @@ const FilterTransactions = (props) => {
       </FilterSection>
       <FilterSection>
         <Label type="info">Expenses</Label>
-        <Label>4000Rs</Label>
+        <Label>{"₹"}{expense}</Label>
         <Label type="info">Income</Label>
-        <Label>8000Rs</Label>
+        <Label>{"₹"}{income}</Label>
         <Label type="info">Balance</Label>
-        <Label>4000Rs</Label>
+        <Label>{"₹"}{income - expense}</Label>
       </FilterSection>
     </Filter>)
 };

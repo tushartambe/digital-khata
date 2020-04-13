@@ -20,28 +20,10 @@ const Wrap = styled.div`
   justify-content : space-evenly;
 `;
 
-const getUniqueData = (transactions) => {
-  let counts = transactions.reduce((prev, curr) => {
-    let count = prev.get(curr.category) || 0;
-    prev.set(curr.category, curr.amount + count);
-    return prev;
-  }, new Map());
-
-  return [...counts].map(([category, amount]) => {
-    return {category, amount}
-  })
-};
-
 const DoughnutChart = (props) => {
-  // const expenses = useSelector(selectExpenses);
-  // const income = useSelector(selectIncome);
-  // const uniqueExpenses = getUniqueData(expenses);
-  // const uniqueIncome = getUniqueData(income);
   const uniqueExpenses = useSelector(selectUniqueExpenses);
   const uniqueIncome = useSelector(selectUniqueIncome);
 
-  const [labels, setLabels] = useState(uniqueExpenses.map(e => e.category));
-  const [data, setData] = useState(uniqueExpenses.map(e => e.amount));
   const [currentCategory, setCurrentCategory] = useState("Expenses");
   const [showExpense, setShowExpense] = useState(true);
 
@@ -69,15 +51,11 @@ const DoughnutChart = (props) => {
   };
 
   const showExpenses = () => {
-    // setLabels(uniqueExpenses.map(e => e.category));
-    // setData(uniqueExpenses.map(e => e.amount));
     setShowExpense(true);
     setCurrentCategory("Expenses");
   };
 
   const showIncome = () => {
-    // setLabels(uniqueIncome.map(e => e.category));
-    // setData(uniqueIncome.map(e => e.amount));
     setShowExpense(false);
     setCurrentCategory("Income");
   };
