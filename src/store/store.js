@@ -7,7 +7,7 @@ const startDate = new Date(date.setDate(date.getDate() - 10));
 const initialState = {
   transactions: {
     filter: {
-      startDate: startDate,
+      startDate: date,
       endDate: new Date()
     },
     transactions: []

@@ -247,9 +247,14 @@ const getInitialUserData = (req, res) => {
         ]).exec((err, data) => {
           if (err) throw err;
           const e = email;
-          const name = data[0].name || "User";
-          const transactions = data[0].transactions || [];
-          const categories = data[0].categories || [];
+          let name = data[0].name;
+          let transactions = data[0].transactions;
+          let categories = data[0].categories;
+          if (!data[0]) {
+            name = "User";
+            transactions = [];
+            categories = [];
+          }
           res.status(200).json({email: e, name: name, transactions: transactions, categories: categories});
         });
 

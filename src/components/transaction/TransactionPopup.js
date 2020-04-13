@@ -2,9 +2,9 @@ import React, {useState} from "react";
 import {PopUpInput} from "../Input";
 import Select from 'react-select';
 import {useDispatch, useSelector} from "react-redux";
-import "../_override-react-date-picker.css"
-import "../transaction/TransactionPopup.css"
-import DatePicker from "react-datepicker/es";
+import "../_override-react-date-picker.css";
+import "../transaction/TransactionPopup.css";
+import DatePicker from 'react-date-picker';
 import {selectCategories, selectEmail, selectFilterDates} from "../../selectors/selectors";
 import {PopupWrapper} from "../PopupWrapper";
 import styled from "styled-components";
@@ -20,8 +20,8 @@ const Alert = styled.div`
 
 const TransactionPopup = () => {
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [date, setDate] = useState(new Date());
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState(null);
   const categories = useSelector(selectCategories);
   const [type, setType] = useState(null);
   const [category, setCategory] = useState(null);
@@ -113,9 +113,9 @@ const TransactionPopup = () => {
 
     <DatePicker
       className="form-date"
-      selected={date}
-      required
-      onChange={(selectedDate) => setDate(selectedDate)}/>
+      value={date}
+      format={"dd-MM-y"}
+      onChange={(selectedDate) => setDate(selectedDate)} required/>
 
     <Select
       className="selector"

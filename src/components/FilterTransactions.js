@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import DatePicker from "react-datepicker";
+import DatePicker from 'react-date-picker';
 import "./_override-react-date-picker.css";
 import Label from "./Label";
 import {useDispatch, useSelector} from "react-redux";
 import {setEmail, setFilter, setName, setTransactions} from "../actions/actions";
-import {selectEmail} from "../selectors/selectors";
+import {selectEmail, selectFilterDates} from "../selectors/selectors";
 
 
 const FilterButton = styled.button`
@@ -34,19 +34,20 @@ const Filter = styled.section`
 `;
 
 const FilterSection = styled.div`
-  width:40%;
+  width:50%;
   height:100%;
   box-sizing:border-box;
   display:flex;
   align-items: center;
+  padding:0 2%; 
   justify-content:${props => props.type === "left" ? "flex-start" : "flex-end"};
 `;
 
 const FilterTransactions = (props) => {
-  let date = new Date();
   const dispatch = useDispatch();
-  const [startDate, setStartDate] = useState(date.setDate(date.getDate() - 10));
-  const [endDate, setEndDate] = useState(new Date());
+  const filterDates = useSelector(selectFilterDates);
+  const [startDate, setStartDate] = useState(filterDates.startDate);
+  const [endDate, setEndDate] = useState(filterDates.endDate);
   const email = useSelector(selectEmail);
 
   const updatFilters = (event) => {
@@ -81,15 +82,19 @@ const FilterTransactions = (props) => {
     <Filter>
       <FilterSection type="left">
         <Label type="info">Start date</Label>
-        <DatePicker
-          className="date"
-          selected={startDate}
-          onChange={setStartDate}/>
+        <div className={"react-date-picker react-date-picker--closed react-date-picker--enabled date"}>
+          <DatePicker
+            format={"dd-MM-y"}
+            onChange={setStartDate}
+            value={startDate}/>
+        </div>
         <Label type="info">End date</Label>
-        <DatePicker
-          className="date"
-          selected={endDate}
-          onChange={setEndDate}/>
+        <div className={"react-date-picker react-date-picker--closed react-date-picker--enabled date"}>
+          <DatePicker
+            format={"dd-MM-y"}
+            onChange={setEndDate}
+            value={endDate}/>
+        </div>
         <FilterButton onClick={updatFilters}>Filter</FilterButton>
       </FilterSection>
       <FilterSection>

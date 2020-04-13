@@ -24,7 +24,7 @@ const Signup = ({history}) => {
       })
         .then(res => {
           if (res.status === 200) {
-            history.push('/dashboard');
+            history.push('/login');
           } else {
             throw new Error(res.error);
           }

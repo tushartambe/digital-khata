@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 import {selectEmail, selectName} from "../selectors/selectors";
-import "react-datepicker/dist/react-datepicker.css";
 import FilterTransactions from "../components/FilterTransactions";
 import DoughnutChart from "../components/charts/DoughnutChart";
 import LineChart from "../components/charts/LineChart";
