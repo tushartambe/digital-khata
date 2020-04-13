@@ -97,6 +97,11 @@ app.post('/api/authenticate', function (req, res) {
   });
 });
 
+app.post("/api/logout", function (req, res) {
+  res.clearCookie("token");
+  return res.sendStatus(200);
+});
+
 const createCategory = function (userId, category) {
   return Category.create(category).then(docImage => {
     return User.findByIdAndUpdate(

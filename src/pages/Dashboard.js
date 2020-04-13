@@ -8,6 +8,7 @@ import LineChart from "../components/charts/LineChart";
 import TransactionSummary from "../components/transaction/TransactionSummary";
 import CategoryList from "../components/category/CategoryList";
 import {setCategories, setEmail, setName, setTransactions} from "../actions/actions";
+import {Input} from "../components/Input";
 
 const DashboardWrapper = styled.div`
   width:86%;
@@ -21,6 +22,11 @@ const Heading = styled.section`
   border:3px solid blue;
   box-sizing:border-box;
   font-size:30px;
+  padding:0 5%;
+  
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 `;
 
 const Container = styled.section`
@@ -39,6 +45,20 @@ const ChartArea = styled.section`
   flex-direction: column;
   align-items:center;  
   justify-content:space-evenly;
+`;
+
+const LogoutButton = styled.button`
+  min-width:80px;
+  height:50%;
+  font-size:1rem;
+  
+  border-radius: 5px;
+  border: 2px solid black;
+  
+  background-color: #5eafff;
+  box-sizing: border-box;
+  cursor:pointer;
+  margin-left:5px;
 `;
 
 const Dashboard = (props) => {
@@ -68,15 +88,32 @@ const Dashboard = (props) => {
       setLoading(false)
     }).catch(err => {
       console.error(err);
-      alert('Unknown Error. Refresh The Page');
     })
   });
+
+  const logout = (event) => {
+    event.preventDefault();
+    fetch('/api/logout', {
+      method: 'POST'
+    })
+      .then(res => {
+        console.log(res)
+        if (res.status === 200) {
+          props.history.push('/login');
+        } else {
+          throw new Error(res.error);
+        }
+      }).catch(err => {
+      console.error(err);
+    });
+  };
 
   return (
     !loading &&
     <DashboardWrapper>
       <Heading>
-        Hello {name}
+        <span>Hello {name}</span>
+        <LogoutButton  onClick={logout}>Logout</LogoutButton>
       </Heading>
       <FilterTransactions/>
       <Container>
