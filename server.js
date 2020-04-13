@@ -12,7 +12,7 @@ const withAuth = require('./middleware');
 const secret = 'mysecretsshhh'; //take it from env
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 const logger = function (req, res, next) {
   console.log("URL:", req.url);
@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(logger);
 
-const mongo_uri = 'mongodb://localhost/digi-khata';
+const mongo_uri = process.env.MONGODB_URI || 'mongodb://@ds143511.mlab.com:43511/heroku_ttclx5b8';
 mongoose.connect(mongo_uri, {useNewUrlParser: true}, function (err) {
   if (err) {
     throw err;
