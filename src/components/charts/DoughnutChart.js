@@ -2,7 +2,7 @@ import styled from "styled-components";
 import React, {useState} from "react";
 import {Doughnut} from "react-chartjs-2";
 import {useSelector} from "react-redux";
-import {selectExpenses, selectIncome} from "../../selectors/selectors";
+import {selectExpenses, selectIncome, selectUniqueExpenses, selectUniqueIncome} from "../../selectors/selectors";
 
 const ChartArea = styled.section`
   width:100%;
@@ -33,17 +33,20 @@ const getUniqueData = (transactions) => {
 };
 
 const DoughnutChart = (props) => {
-  const expenses = useSelector(selectExpenses);
-  const income = useSelector(selectIncome);
-  const uniqueExpenses = getUniqueData(expenses);
-  const uniqueIncome = getUniqueData(income);
+  // const expenses = useSelector(selectExpenses);
+  // const income = useSelector(selectIncome);
+  // const uniqueExpenses = getUniqueData(expenses);
+  // const uniqueIncome = getUniqueData(income);
+  const uniqueExpenses = useSelector(selectUniqueExpenses);
+  const uniqueIncome = useSelector(selectUniqueIncome);
 
   const [labels, setLabels] = useState(uniqueExpenses.map(e => e.category));
   const [data, setData] = useState(uniqueExpenses.map(e => e.amount));
   const [currentCategory, setCurrentCategory] = useState("Expenses");
+  const [showExpense, setShowExpense] = useState(true);
 
   const state = {
-    labels: labels,
+    labels: showExpense ? uniqueExpenses.map(e => e.category) : uniqueIncome.map(e => e.category),
     datasets: [
       {
         backgroundColor: [
@@ -60,20 +63,22 @@ const DoughnutChart = (props) => {
           '#003350',
           '#35014F'
         ],
-        data: data
+        data: showExpense ? uniqueExpenses.map(e => e.amount) : uniqueIncome.map(e => e.amount)
       }
     ]
   };
 
   const showExpenses = () => {
-    setLabels(uniqueExpenses.map(e => e.category));
-    setData(uniqueExpenses.map(e => e.amount));
+    // setLabels(uniqueExpenses.map(e => e.category));
+    // setData(uniqueExpenses.map(e => e.amount));
+    setShowExpense(true);
     setCurrentCategory("Expenses");
   };
 
   const showIncome = () => {
-    setLabels(uniqueIncome.map(e => e.category));
-    setData(uniqueIncome.map(e => e.amount));
+    // setLabels(uniqueIncome.map(e => e.category));
+    // setData(uniqueIncome.map(e => e.amount));
+    setShowExpense(false);
     setCurrentCategory("Income");
   };
 

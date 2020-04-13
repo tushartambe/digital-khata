@@ -61,7 +61,7 @@ const Signup = ({history}) => {
                onChange={e => setConfirmPassword(e.target.value)}
         />
         <Input type="submit" value="Create Account"/>
-        <span>Already have an account? <Link exact to="/login">Log in</Link></span>
+        <span>Already have an account? <Link to="/login">Log in</Link></span>
       </form>
     </Wrapper>
   );

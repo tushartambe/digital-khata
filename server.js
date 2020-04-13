@@ -201,41 +201,65 @@ app.post('/api/add-transaction', function (req, res) {
   });
 });
 
-const getInitialUserData = (email, req, res) => {
+const getInitialUserData = (req, res) => {
   const date = new Date();
   const startDate = new Date(date.setDate(date.getDate() - 10));
   const endDate = new Date();
+  let {email} = req.body;
 
-  User.aggregate([
-    {$match: {email: email}},
-    {
-      "$project": {
-        "email": "$email",
-        "name": "$name",
-        "categories": "$categories",
-        "transactions": {
-          "$filter": {
-            "input": "$transactions",
-            "as": "transaction",
-            "cond": {
-              "$and": [
-                {"$gte": ["$$transaction.date", startDate]},
-                {"$lte": ["$$transaction.date", endDate]}
-              ]
+  const token =
+    req.body.token ||
+    req.query.token ||
+    req.headers['x-access-token'] ||
+    req.cookies.token;
+
+  if (!token) {
+    res.status(401).send('Unauthorized: No token provided');
+  } else {
+    jwt.verify(token, secret, function (err, decoded) {
+      if (err) {
+        res.status(401).send('Unauthorized: Invalid token');
+        return;
+      } else {
+        email = decoded.email;
+
+        User.aggregate([
+          {$match: {email: email}},
+          {
+            "$project": {
+              "email": "$email",
+              "name": "$name",
+              "categories": "$categories",
+              "transactions": {
+                "$filter": {
+                  "input": "$transactions",
+                  "as": "transaction",
+                  "cond": {
+                    "$and": [
+                      {"$gte": ["$$transaction.date", startDate]},
+                      {"$lte": ["$$transaction.date", endDate]}
+                    ]
+                  }
+                }
+              }
             }
           }
-        }
+        ]).exec((err, data) => {
+          if (err) throw err;
+          const e = email;
+          const name = data[0].name || "User";
+          const transactions = data[0].transactions || [];
+          const categories = data[0].categories || [];
+          res.status(200).json({email: e, name: name, transactions: transactions, categories: categories});
+        });
+
       }
-    }
-  ]).exec((err, data) => {
-    if (err) throw err;
-    res.status(200).json(data[0]);
-  });
+    });
+  }
 };
 
 app.post("/api/get-initial-data", function (req, res) {
-  const {email} = req.body;
-  getInitialUserData(email, req, res);
+  getInitialUserData(req, res);
 });
 
 app.post("/api/get-transactions", function (req, res) {
@@ -262,7 +286,10 @@ app.post("/api/get-transactions", function (req, res) {
     }
   ]).exec((err, data) => {
     if (err) throw err;
-    res.status(200).json(data[0]);
+    const e = email;
+    const name = data[0].name || "User";
+    const transactions = data[0].transactions || [];
+    res.status(200).json({email: e, name: name, transactions: transactions});
   });
 });
 
@@ -280,7 +307,10 @@ app.post("/api/get-categories", function (req, res) {
     }
   ]).exec((err, data) => {
     if (err) throw err;
-    res.status(200).json(data[0]);
+    const e = email;
+    const name = data[0].name || "User";
+    const categories = data[0].categories || [];
+    res.status(200).json({email: e, name: name, categories: categories});
   });
 });
 app.get('/checkToken', withAuth, function (req, res) {

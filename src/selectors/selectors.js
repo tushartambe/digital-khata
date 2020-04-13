@@ -23,3 +23,25 @@ export const selectCategories = state => state.categories;
 export const selectFilterDates = state => {
   return state.transactions.filter;
 };
+
+const getUniqueData = (transactions) => {
+  let counts = transactions.reduce((prev, curr) => {
+    let count = prev.get(curr.category) || 0;
+    prev.set(curr.category, curr.amount + count);
+    return prev;
+  }, new Map());
+
+  return [...counts].map(([category, amount]) => {
+    return {category, amount}
+  })
+};
+
+export const selectUniqueExpenses = state => {
+  const expenses = selectExpenses(state);
+  return getUniqueData(expenses);
+};
+
+export const selectUniqueIncome = state => {
+  const income = selectIncome(state);
+  return getUniqueData(income);
+}

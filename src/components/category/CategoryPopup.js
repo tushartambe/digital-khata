@@ -5,7 +5,7 @@ import styled from "styled-components";
 import "../transaction/TransactionPopup.css"
 import Header from "../Header";
 import {PopUpInput} from "../Input";
-import {setCategories, setEmail, setName, setTransactions} from "../../actions/actions";
+import {setCategories, setEmail, setName} from "../../actions/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {selectEmail} from "../../selectors/selectors";
 

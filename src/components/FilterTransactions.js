@@ -3,8 +3,9 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "./_override-react-date-picker.css";
 import Label from "./Label";
-import {useDispatch} from "react-redux";
-import {setFilter} from "../actions/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {setEmail, setFilter, setName, setTransactions} from "../actions/actions";
+import {selectEmail} from "../selectors/selectors";
 
 
 const FilterButton = styled.button`
@@ -46,6 +47,35 @@ const FilterTransactions = (props) => {
   const dispatch = useDispatch();
   const [startDate, setStartDate] = useState(date.setDate(date.getDate() - 10));
   const [endDate, setEndDate] = useState(new Date());
+  const email = useSelector(selectEmail);
+
+  const updatFilters = (event) => {
+    event.preventDefault();
+    dispatch(setFilter({startDate, endDate}));
+
+    fetch('/api/get-transactions', {
+      method: 'POST',
+      body: JSON.stringify({email: email, startDate: startDate, endDate: endDate}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      if (res.status === 200) {
+      } else {
+        throw new Error(res.error);
+      }
+      return res.json();
+    }).then(res => {
+      dispatch(setName(res.name));
+      dispatch(setEmail(res.email));
+      dispatch(setTransactions(res.transactions));
+      console.log(res.transactions, "THESE ARE COMING");
+    }).catch(err => {
+      console.error(err);
+      alert('Some Error. Refresh the page');
+    })
+  };
+
 
   return (
     <Filter>
@@ -60,7 +90,7 @@ const FilterTransactions = (props) => {
           className="date"
           selected={endDate}
           onChange={setEndDate}/>
-        <FilterButton onClick={() => dispatch(setFilter({startDate, endDate}))}>Filter</FilterButton>
+        <FilterButton onClick={updatFilters}>Filter</FilterButton>
       </FilterSection>
       <FilterSection>
         <Label type="info">Expenses</Label>

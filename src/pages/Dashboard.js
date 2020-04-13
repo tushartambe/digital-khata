@@ -66,11 +66,10 @@ const Dashboard = (props) => {
       dispatch(setEmail(res.email));
       dispatch(setCategories(res.categories));
       dispatch(setTransactions(res.transactions));
-      setLoading(false);
+      setLoading(false)
     }).catch(err => {
       console.error(err);
       alert('Unknown Error. Refresh The Page');
-      // window.location.href = "http://localhost:3000/"
     })
   });
 
