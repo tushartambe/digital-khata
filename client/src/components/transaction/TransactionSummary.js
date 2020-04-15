@@ -1,10 +1,15 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {selectTransactions} from "../../selectors/selectors";
 import Header from "../Header";
 import TransactionPopup from "./TransactionPopup";
 import Modal from "../Modal";
+import {Avatar, Card} from "antd";
+import 'antd/dist/antd.css';
+import {DeleteTwoTone, EditTwoTone} from '@ant-design/icons';
+
+const {Meta} = Card;
 
 const ChartArea = styled.section`
   width:30%;
@@ -25,43 +30,36 @@ const Transactions = styled.div`
   height:100%;
   overflow-y:scroll;
   box-sizing:border-box;
+  padding: 5px;
 `;
-
-const Transaction = styled.div`
-  width:99%;
-  height:60px;
-  mix-height:60px;
-  
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  box-sizing:border-box;
-  margin:5px 2px 5px 2px;
-  padding: 0 10px 0 10px;
-  border-width:1px;
-  border-style: solid;
-  border-color:black;
-  border-radius:60px;
-  // border-color:${props => props.type === "expense" ? "#EF4037" : "darkgreen"};
-  // background-color: ${props => props.type === "expense" ? "#FBB03B" : "#8CC63F"};
-  font-weight:bold;
-  color:${props => props.type === "expense" ? "#EF4037" : "darkgreen"};
-`;
-
 
 const TransactionSummary = (props) => {
   const transactions = useSelector(selectTransactions);
-
+  const styles = {
+    "income": {color: '#5f9249', backgroundColor: '#c3e8b4'},
+    "expense": {color: '#f56a00', backgroundColor: '#fde3cf'}
+  };
   return (
     <ChartArea>
       <Transactions>
         <Header>Transactions</Header>
         <Modal><TransactionPopup/></Modal>
-        {transactions.map((t, i) => (
-          <Transaction type={t.type} key={i}><span>{new Date(t.date).toLocaleDateString("en-GB")}</span>
-            <span>{t.category}</span>
-            <span>{t.type === "expense" ? "- " : "+ "}{t.amount}</span></Transaction>))}
+        {transactions.map((t, i) =>
+          (
+            <Card
+              size="small"
+              style={{width: "100%", borderColor:"grey", marginBottom:"2px"}}
+              actions={[
+                <EditTwoTone key="edit"/>,
+                <DeleteTwoTone key="delete" twoToneColor="red"/>
+              ]}>
+              <Meta
+                avatar={<Avatar size={64} style={styles[t.type]}>{t.amount}</Avatar>}
+                title={t.category}
+                description={new Date(t.date).toLocaleDateString("en-GB")}/>
+            </Card>
+          )
+        )}
       </Transactions>
     </ChartArea>
   )
