@@ -5,6 +5,8 @@ import Modal from "../Modal";
 import CategoryPopup from "./CategoryPopup";
 import {selectCategories} from "../../selectors/selectors";
 import {useSelector} from "react-redux";
+import {List, Typography} from "antd";
+import {DeleteTwoTone, MinusCircleTwoTone, PlusCircleTwoTone} from '@ant-design/icons';
 
 const ChartArea = styled.section`
   width:20%;
@@ -13,64 +15,48 @@ const ChartArea = styled.section`
   display: flex;
   flex-direction: column;
   
-  border:3px solid blue;
+  border:1px solid blue;
   overflow-y: auto;
   box-sizing:border-box;
-`;
-
-const Categories = styled.div`
-  width:100%;
-  height:100%;
-  overflow-y:scroll;
-  box-sizing:border-box;
-`;
-
-const Category = styled.div`
-  width:99%;
-  height:60px;
-  mix-height:60px;
-  
-  display: flex;
-  align-items: center;
-
-  box-sizing:border-box;
-  margin:5px 2px 5px 2px;
-  padding: 0 10px 0 10px;
-  border-width:1px;
-  border-style: solid;
-  border-color:black;
-  border-radius:60px;
-  font-weight:bold;
-  color:${props => props.type === "expense" ? "#EF4037" : "darkgreen"};
-`;
-
-const Symbol = styled.div`
-  width:50px;
-  height:50px;
-  margin:0;
-  text-align:center;
-  font-size:2.0rem;
-  
-  box-sizing:border-box;
-  border-radius:50%;
-  
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  padding:0 5px;
 `;
 
 const CategoryList = (props) => {
   const categories = useSelector(selectCategories);
+  const colors = {
+    income: ["#5f9249", "#c3e8b4", "#9fd986"],
+    expense: ['#f56a00', '#fde3cf', "#f78833"]
+  };
 
   return (
     <ChartArea>
       <Header>Categories</Header>
       <Modal> <CategoryPopup/></Modal>
-      <Categories>
-        {categories.map((c, i) => <Category
-          type={c.type}
-          key={i}><Symbol>{c.type === "expense" ? "🎁" : "💰"}</Symbol><span>{c.name}</span></Category>)}
-      </Categories>
+      <List
+        itemLayout="horizontal"
+        dataSource={categories}
+        renderItem={item => (
+          <List.Item
+            style={{
+              width: "100%",
+              backgroundColor: colors[item.type][1],
+              padding: "5px",
+              marginBottom: "2px",
+              borderRadius: "50px"
+            }}
+            actions={[<DeleteTwoTone key="list-loadmore-edit" twoToneColor={"red"}
+                                     style={{fontSize: 22}}>Delete</DeleteTwoTone>]}
+          >
+            {item.type === "expense" ? <MinusCircleTwoTone twoToneColor={'#f56a00'} style={{fontSize: 28}}/> :
+              <PlusCircleTwoTone twoToneColor={"#6ca653"} style={{fontSize: 28}}/>}
+            <Typography.Text style={{
+              color: colors[item.type][0],
+              fontWeight: "bold",
+            }}>{item.name}</Typography.Text>
+          </List.Item>
+        )}
+      >
+      </List>
     </ChartArea>
   )
 };
