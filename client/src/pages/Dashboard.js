@@ -8,7 +8,6 @@ import LineChart from "../components/charts/LineChart";
 import TransactionSummary from "../components/transaction/TransactionSummary";
 import CategoryList from "../components/category/CategoryList";
 import {setCategories, setEmail, setName, setTransactions} from "../actions/actions";
-import {Input} from "../components/Input";
 
 const DashboardWrapper = styled.div`
   width:86%;

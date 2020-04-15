@@ -1,14 +1,15 @@
 import React, {useState} from "react";
 import Header from "../components/Header";
-import {Input} from "../components/Input";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setEmail, setName} from "../actions/actions";
 import Wrapper from "../components/Wrapper";
-
+import {Button, Form, Input} from "antd";
+import 'antd/dist/antd.css';
+import {LockTwoTone, MailTwoTone} from '@ant-design/icons';
 
 const Login = ({history}) => {
-  const [email, SetLocalEmail] = useState("");
+  const [email, setLocalEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
 
@@ -40,19 +41,51 @@ const Login = ({history}) => {
   return (
     <Wrapper>
       <Header>Log In</Header>
-      <form onSubmit={onSubmit}>
-        <Input type="email"
-               placeholder="yourmail@domain.com"
-               value={email}
-               onChange={e => SetLocalEmail(e.target.value)}/>
-        <Input type="password"
-               placeholder="your password"
-               value={password}
-               onChange={e => setPassword(e.target.value)}/>
-        <Input type="submit" value="Login"/>
-        <span>Don't have an account? <Link to="/signup">Create One</Link></span>
-      </form>
+      <Form
+        name="normal_login"
+        className="login-form"
+        initialValues={{
+          remember: true,
+        }}
+      >
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              required: true,
+              type: "email",
+              message: 'Please enter your Email!',
+            },
+          ]}
+          hasFeedback
+        >
+          <Input prefix={<MailTwoTone className="site-form-item-icon"/>}
+                 placeholder="yourmail@domain.com"
+                 onChange={e => setLocalEmail(e.target.value)}/>
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your Password!',
+            },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockTwoTone className="site-form-item-icon"/>}
+            placeholder="Password"
+            onChange={e => setPassword(e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <Button type={"primary"} onClick={onSubmit} block>Log In</Button>
+          Don't have an account?<Link to="/signup">Create One</Link>
+        </Form.Item>
+      </Form>
     </Wrapper>
+
   );
 };
 export default Login;
