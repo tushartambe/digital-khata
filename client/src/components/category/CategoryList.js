@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
 import Header from "../Header";
-import Modal from "../Modal";
 import CategoryPopup from "./CategoryPopup";
 import {selectCategories} from "../../selectors/selectors";
 import {useSelector} from "react-redux";
@@ -31,7 +30,7 @@ const CategoryList = (props) => {
   return (
     <ChartArea>
       <Header>Categories</Header>
-      <Modal> <CategoryPopup/></Modal>
+      <CategoryPopup/>
       <List
         itemLayout="horizontal"
         dataSource={categories}

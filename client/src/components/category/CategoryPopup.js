@@ -1,31 +1,19 @@
 import React, {useState} from "react";
-import Select from "react-select";
-import {PopupWrapper} from "../PopupWrapper";
-import styled from "styled-components";
 import "../transaction/TransactionPopup.css"
-import Header from "../Header";
-import {PopUpInput} from "../Input";
 import {setCategories, setEmail, setName} from "../../actions/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {selectEmail} from "../../selectors/selectors";
+import {Button, Form, Input, Modal, Select, message} from "antd";
 
-const Alert = styled.div`
-    height: 30px;
-    width: 100%;
-    box-sizing:border-box;
-    text-align:center;
-`;
+const {Option} = Select;
 
 const CategoryPopup = ({history}) => {
   const [category, setCategory] = useState("")
-  const [type, setType] = useState(null);
-  const [isDone, setDone] = useState(false);
+  const [type, setType] = useState("income");
   const email = useSelector(selectEmail);
   const dispatch = useDispatch();
-  const types = [
-    {value: 'income', label: 'Income'},
-    {value: 'expense', label: 'Expense'},
-  ];
+  const types = ["income", "expense"];
+  const [showModal, toggleModalShow] = useState(false);
 
   const updateCategories = () => {
     fetch('/api/get-categories', {
@@ -52,9 +40,10 @@ const CategoryPopup = ({history}) => {
 
   const addCategory = (event) => {
     event.preventDefault();
+    toggleModalShow(false);
     fetch('/api/add-category', {
       method: 'POST',
-      body: JSON.stringify({email: email, type: type.value, name: category, emoji: ""}),
+      body: JSON.stringify({email: email, type: type, name: category, emoji: ""}),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -63,50 +52,81 @@ const CategoryPopup = ({history}) => {
         throw new Error(res.error);
       } else {
         updateCategories();
+        message.success("Category Added Successfully!")
       }
     }).catch(err => {
       console.error(err);
-      alert('Error adding category again');
+      message.error("Error adding Category!")
     });
   };
 
-  const resetLocalState = () => {
-    setCategory("");
-    setType(null);
-    setDone("Your category is saved successfully");
-  };
+  return (
+    <div>
+      <Button type="primary" onClick={() => {
+        toggleModalShow(true)
+      }}>
+        Add New Category
+      </Button>
+      <Modal
+        title="Add Category"
+        visible={showModal}
+        onCancel={() => {
+          toggleModalShow(false)
+        }}
+        footer={[
+          <Button key="submit" type="primary" onClick={addCategory}>
+            Add Category
+          </Button>,
+        ]}
+      >
+        <Form
+          name="add-category"
+          initialValues={{
+            type: type
+          }}
+        >
+          <Form.Item
+            label="Type"
+            name="type"
+            rules={[
+              {
+                required: true,
+                message: 'Please select type!',
+              },
+            ]}
+          >
+            <Select
+              style={{width: 120}}
+              onChange={(value) => {
+                setType(value)
+              }}
+            >
+              {types.map(t => (
+                <Option key={t}>{t}</Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-  return (<PopupWrapper onFocus={() => setDone("")}>
-    <Header>Category Details</Header>
-    {isDone ? <Alert>{isDone}</Alert> : ""}
-    <Select
-      className="selector"
-      value={type}
-      placeholder="select type"
-      required
-      onChange={(selectedType) => {
-        setType(selectedType);
-      }}
-      options={types}
-    />
-
-    <PopUpInput
-      type="text"
-      placeholder="Name"
-      value={category}
-      required
-      onChange={e => setCategory(e.target.value)}/>
-
-    <PopUpInput type="submit" value="Add category" onClick={(event) => {
-      if (category && type) {
-        addCategory(event);
-        resetLocalState();
-      } else {
-        setDone("Something is missing");
-      }
-    }}/>
-
-  </PopupWrapper>)
+          <Form.Item
+            label="Category"
+            name="category"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter category name!',
+              },
+            ]}
+          >
+            <Input placeholder={"New Category Name"}
+                   onChange={(event) => {
+                     setCategory(event.target.value)
+                   }}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
+  )
 };
 
 export default CategoryPopup;
