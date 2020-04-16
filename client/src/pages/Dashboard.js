@@ -8,7 +8,8 @@ import LineChart from "../components/charts/LineChart";
 import TransactionSummary from "../components/transaction/TransactionSummary";
 import CategoryList from "../components/category/CategoryList";
 import {setCategories, setEmail, setName, setTransactions} from "../actions/actions";
-
+import  {PoweroffOutlined} from "@ant-design/icons";
+import {Button} from "antd";
 const DashboardWrapper = styled.div`
   width:86%;
   height:100%;
@@ -112,7 +113,12 @@ const Dashboard = (props) => {
     <DashboardWrapper>
       <Heading>
         <span>Hello {name}</span>
-        <LogoutButton  onClick={logout}>Logout</LogoutButton>
+        <Button
+          type="danger"
+          icon={<PoweroffOutlined/>}
+          onClick={logout}>
+          Logout
+        </Button>
       </Heading>
       <FilterTransactions/>
       <Container>

@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import {Doughnut} from "react-chartjs-2";
 import {useSelector} from "react-redux";
 import {selectExpenses, selectIncome, selectUniqueExpenses, selectUniqueIncome} from "../../selectors/selectors";
+import {Radio} from "antd";
 
 const ChartArea = styled.section`
   width:100%;
@@ -24,7 +25,7 @@ const DoughnutChart = (props) => {
   const uniqueExpenses = useSelector(selectUniqueExpenses);
   const uniqueIncome = useSelector(selectUniqueIncome);
 
-  const [currentCategory, setCurrentCategory] = useState("Expenses");
+  const [currentCategory, setCurrentCategory] = useState("expense");
   const [showExpense, setShowExpense] = useState(true);
 
   const state = {
@@ -50,16 +51,16 @@ const DoughnutChart = (props) => {
     ]
   };
 
-  const showExpenses = () => {
-    setShowExpense(true);
-    setCurrentCategory("Expenses");
+  const toTitleCase = (title) => {
+    const FirstChar = title[0].toUpperCase();
+    const remaining = title.split("").splice(1);
+    return FirstChar + remaining.join("");
   };
 
-  const showIncome = () => {
-    setShowExpense(false);
-    setCurrentCategory("Income");
+  const toggle = (event) => {
+    setShowExpense(!showExpense);
+    setCurrentCategory(event.target.value);
   };
-
   return (
     <ChartArea>
       <Doughnut
@@ -67,7 +68,7 @@ const DoughnutChart = (props) => {
         options={{
           title: {
             display: true,
-            text: currentCategory,
+            text: toTitleCase(currentCategory),
             fontSize: 20
           },
           legend: {
@@ -77,8 +78,10 @@ const DoughnutChart = (props) => {
         }}
       />
       <Wrap>
-        <input type={"button"} onClick={showExpenses} value={"Expenses"}/>
-        <input type={"button"} onClick={showIncome} value={"Income"}/>
+        <Radio.Group value={currentCategory}  buttonStyle="solid" onChange={toggle}>
+          <Radio.Button value="expense">Expense</Radio.Button>
+          <Radio.Button value="income">Income</Radio.Button>
+        </Radio.Group>
       </Wrap>
     </ChartArea>
   )

@@ -1,26 +1,13 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import DatePicker from 'react-date-picker';
 import "./_override-react-date-picker.css";
 import Label from "./Label";
 import {useDispatch, useSelector} from "react-redux";
 import {setEmail, setFilter, setName, setTransactions} from "../actions/actions";
-import {selectEmail, selectExpenses, selectFilterDates, selectIncome, selectTransactions} from "../selectors/selectors";
-
-
-const FilterButton = styled.button`
-  min-width:80px;
-  height:50%;
-  font-size:1rem;
-  
-  border-radius: 5px;
-  border: 2px solid black;
-  
-  background-color: #5eafff;
-  box-sizing: border-box;
-  cursor:pointer;
-  margin-left:5px;
-`;
+import {selectEmail, selectFilterDates, selectTransactions} from "../selectors/selectors";
+import {Button, DatePicker} from 'antd';
+import moment from "moment";
+import {FilterOutlined} from "@ant-design/icons";
 
 const Filter = styled.section`
   width: 100%;
@@ -57,7 +44,7 @@ const FilterTransactions = (props) => {
   };
   let {expense, income} = transactions.reduce(getSummary, {expense: 0, income: 0});
 
-  const updatFilters = (event) => {
+  const updateFilters = (event) => {
     event.preventDefault();
     dispatch(setFilter({startDate, endDate}));
 
@@ -84,25 +71,17 @@ const FilterTransactions = (props) => {
     })
   };
 
+  const onDateChange = (dates, dateStrings) => {
+    dates && setStartDate(dates[0]._d);
+    dates && setEndDate(dates[1]._d);
+  };
 
   return (
     <Filter>
       <FilterSection type="left">
-        <Label type="info">Start date</Label>
-        <div className={"react-date-picker react-date-picker--closed react-date-picker--enabled date"}>
-          <DatePicker
-            format={"dd-MM-y"}
-            onChange={setStartDate}
-            value={startDate}/>
-        </div>
-        <Label type="info">End date</Label>
-        <div className={"react-date-picker react-date-picker--closed react-date-picker--enabled date"}>
-          <DatePicker
-            format={"dd-MM-y"}
-            onChange={setEndDate}
-            value={endDate}/>
-        </div>
-        <FilterButton onClick={updatFilters}>Filter</FilterButton>
+        <DatePicker.RangePicker defaultValue={[moment(startDate), moment(endDate)]} format={"DD-MM-YYYY"}
+                                onChange={onDateChange}/>
+        <Button type="primary" icon={<FilterOutlined/>} onClick={updateFilters}>Filter</Button>
       </FilterSection>
       <FilterSection>
         <Label type="info">Expenses</Label>
