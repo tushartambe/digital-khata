@@ -1,46 +1,38 @@
 import React, {useState} from "react";
-import {PopUpInput} from "../Input";
-import Select from 'react-select';
+// import Select from 'react-select';
 import {useDispatch, useSelector} from "react-redux";
 import "../_override-react-date-picker.css";
 import "../transaction/TransactionPopup.css";
-import DatePicker from 'react-date-picker';
+// import DatePicker from 'react-date-picker';
 import {selectCategories, selectEmail, selectFilterDates} from "../../selectors/selectors";
-import {PopupWrapper} from "../PopupWrapper";
 import styled from "styled-components";
-import Header from "../Header";
 import {setEmail, setName, setTransactions} from "../../actions/actions";
+import {Button, DatePicker, Form, Input, InputNumber, Modal, Select} from "antd";
+import moment from "moment";
+import {PlusOutlined} from "@ant-design/icons";
 
-const Alert = styled.div`
-    height: 30px;
-    width: 100%;
-    box-sizing:border-box;
-    text-align:center;
-`;
+const {Option} = Select;
+
 
 const TransactionPopup = () => {
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
-  const [date, setDate] = useState(null);
+  const [amount, setAmount] = useState();
+  const [date, setDate] = useState(new Date());
+  const [type, setType] = useState("income");
+
+
   const categories = useSelector(selectCategories);
-  const [type, setType] = useState(null);
-  const [category, setCategory] = useState(null);
-  const [categoriesToShow, setShowableCategories] = useState(null);
-  const [isDone, setDone] = useState(false);
   const email = useSelector(selectEmail);
   const filterDates = useSelector(selectFilterDates);
   const dispatch = useDispatch();
-  const types = [
-    {value: 'income', label: 'Income'},
-    {value: 'expense', label: 'Expense'},
-  ];
 
-  const filterCategories = (categories, selectedType) => {
-    const applicableCategories = categories.filter(category => category.type === selectedType.value);
-    let categoriesToShow = [];
-    applicableCategories.forEach(category => categoriesToShow.push({value: category.name, label: category.name}));
-    return categoriesToShow;
+  const types = ['income', 'expense'];
+  const typeCategories = {
+    income: categories.filter(c => c.type === "income").map(c => c.name),
+    expense: categories.filter(c => c.type === "expense").map(c => c.name)
   };
+  const [category, setCategory] = useState(typeCategories["income"][0]);
+  const [showModal, toggleModalShow] = useState(false);
 
   const updateTransactions = () => {
     fetch('/api/get-transactions', {
@@ -73,8 +65,8 @@ const TransactionPopup = () => {
         email: email,
         amount: amount,
         date: date,
-        type: type.value,
-        category: category.value,
+        type: type,
+        category: category,
         description: description
       }),
       headers: {
@@ -91,69 +83,144 @@ const TransactionPopup = () => {
     });
   };
 
-  const resetLocalState = () => {
-    setDate(new Date);
-    setType(types[0]);
-    setCategory(categoriesToShow[0]);
-    setAmount(0);
-    setDone("Your transaction is successful");
-    setDescription("");
-  };
+  return (
+    <div>
+      <Button type="primary" shape="circle" icon={<PlusOutlined/>} onClick={() => {
+        toggleModalShow(true)
+      }}/>
+      <Modal
+        title="Add Transaction"
+        visible={showModal}
+        onOk={(e) => {
+          addTransaction(e);
+          toggleModalShow(false);
+        }}
+        onCancel={() => {
+          toggleModalShow(false);
+        }}
+      >
+        <div>
+          <Form
+            layout={"vertical"}
+            name="add-transaction"
+            initialValues={{
+              type: type,
+              date: moment(date),
+              incomeCategory: typeCategories["income"][0],
+              expenseCategory: typeCategories["expense"][0]
+            }}
+          >
+            <Form.Item
+              label="Amount"
+              name="amount"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter amount!',
+                },
+              ]}
+            >
+              <InputNumber
+                style={{width: "100%"}}
+                min={1}
+                onChange={(value) => {
+                  setAmount(value);
+                }}
+              />
+            </Form.Item>
 
-  return <PopupWrapper onFocus={() => setDone("")}>
-    <Header>Transaction Details</Header>
+            <Form.Item
+              label="Date"
+              name="date"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select date!',
+                },
+              ]}
+            >
+              <DatePicker
+                style={{width: "100%"}}
+                onChange={(d) => {
+                  d && setDate(d._d);
+                }}/>
+            </Form.Item>
 
-    {isDone ? <Alert>{isDone}</Alert> : ""}
-    <PopUpInput
-      type="number"
-      placeholder="amount"
-      value={amount}
-      required
-      onChange={e => setAmount(e.target.value)}/>
+            <Form.Item
+              label="Type"
+              name="type"
+              value={type}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select type!',
+                },
+              ]}
+            >
+              <Select
+                value={type}
+                onChange={(value) => {
+                  setType(value);
+                }}
+              >
+                {types.map(type => (
+                  <Option key={type}>{type}</Option>
+                ))}
+              </Select>
+            </Form.Item>
 
-    <DatePicker
-      className="form-date"
-      value={date}
-      format={"dd-MM-y"}
-      onChange={(selectedDate) => setDate(selectedDate)} required/>
-
-    <Select
-      className="selector"
-      value={type}
-      placeholder="select type"
-      required
-      onChange={(selectedType) => {
-        setType(selectedType);
-        setCategory(null);
-        setShowableCategories(filterCategories(categories, selectedType));
-      }}
-      options={types}
-    />
-
-    {type ? <Select
-      className="selector"
-      value={category}
-      placeholder="select category"
-      required
-      onChange={(selectedCategory) => setCategory(selectedCategory)}
-      options={categoriesToShow}/> : ""}
-
-    <PopUpInput type="text"
-                placeholder="note (optional) "
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-    />
-
-    <PopUpInput type="submit" value="Add transaction" onClick={(event) => {
-      if (amount && date && type && category) {
-        addTransaction(event);
-        resetLocalState();
-      } else {
-        setDone("Something is missing");
-      }
-    }}/>
-
-  </PopupWrapper>
+            <Form.Item
+              noStyle
+              shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+            >
+              {({getFieldValue}) => {
+                return getFieldValue('type') === 'income' ? (
+                  <Form.Item
+                    name="incomeCategory"
+                    label="Category"
+                    rules={[{required: true}]}
+                  >
+                    <Select
+                      onChange={(value) => {
+                        setCategory(value);
+                      }}
+                    >
+                      {typeCategories.income.map(c => (
+                        <Option key={c}>{c}</Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                ) : <Form.Item
+                  name="expenseCategory"
+                  label="Category"
+                  rules={[{required: true}]}
+                >
+                  <Select
+                    onChange={(value) => {
+                      setCategory(value);
+                    }}
+                  >
+                    {typeCategories.expense.map(c => (
+                      <Option key={c}>{c}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>;
+              }}
+            </Form.Item>
+            <Form.Item
+              label="Description"
+              name="description"
+            >
+              <Input
+                onChange={(value) => {
+                  setDescription(value);
+                }}
+              />
+            </Form.Item>
+          </Form>
+        </div>
+      </Modal>
+    </div>)
 };
 
 export default TransactionPopup;

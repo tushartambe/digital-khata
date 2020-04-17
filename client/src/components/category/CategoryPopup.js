@@ -4,6 +4,7 @@ import {setCategories, setEmail, setName} from "../../actions/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {selectEmail} from "../../selectors/selectors";
 import {Button, Form, Input, Modal, Select, message} from "antd";
+import {PlusOutlined} from "@ant-design/icons";
 
 const {Option} = Select;
 
@@ -62,11 +63,9 @@ const CategoryPopup = ({history}) => {
 
   return (
     <div>
-      <Button type="primary" onClick={() => {
+      <Button type="primary" shape="circle" icon={<PlusOutlined/>} onClick={() => {
         toggleModalShow(true)
-      }}>
-        Add New Category
-      </Button>
+      }}/>
       <Modal
         title="Add Category"
         visible={showModal}

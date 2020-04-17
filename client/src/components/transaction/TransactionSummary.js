@@ -4,7 +4,6 @@ import {useSelector} from "react-redux";
 import {selectTransactions} from "../../selectors/selectors";
 import Header from "../Header";
 import TransactionPopup from "./TransactionPopup";
-import Modal from "../Modal";
 import {Avatar, Card} from "antd";
 import 'antd/dist/antd.css';
 import {DeleteTwoTone, EditTwoTone} from '@ant-design/icons';
@@ -43,12 +42,12 @@ const TransactionSummary = (props) => {
     <ChartArea>
       <Transactions>
         <Header>Transactions</Header>
-        <Modal><TransactionPopup/></Modal>
+        <TransactionPopup/>
         {transactions.map((t, i) =>
           (
             <Card
               size="small"
-              style={{width: "100%", borderColor:"grey", marginBottom:"2px"}}
+              style={{width: "100%", borderColor: "grey", marginBottom: "2px"}}
               actions={[
                 <EditTwoTone key="edit"/>,
                 <DeleteTwoTone key="delete" twoToneColor="red"/>

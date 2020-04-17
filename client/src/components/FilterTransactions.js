@@ -64,7 +64,6 @@ const FilterTransactions = (props) => {
       dispatch(setName(res.name));
       dispatch(setEmail(res.email));
       dispatch(setTransactions(res.transactions));
-      console.log(res.transactions, "THESE ARE COMING");
     }).catch(err => {
       console.error(err);
       alert('Some Error. Refresh the page');
