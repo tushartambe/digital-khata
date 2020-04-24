@@ -1,13 +1,15 @@
-const {addCategory, addTransaction, getCategories, getInitialUserData, getTransactions} = require("./handlers/handlers");
+const {deleteTransaction, addCategory, addTransaction, getCategories, getInitialUserData, getTransactions} = require("./handlers/handlers");
 const {authenticate, logout} = require("./handlers/user");
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const path = require("path");
+// const path = require("path");
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const withAuth = require('./middleware');
+const {deleteCategory} = require("./handlers/handlers");
+const {updateTransaction} = require("./handlers/handlers");
 const {internalServerError, logger} = require("./utils/utils");
 
 const app = express();
@@ -54,6 +56,9 @@ app.post('/api/add-transaction', addTransaction);
 app.post("/api/get-initial-data", getInitialUserData);
 app.post("/api/get-transactions", getTransactions);
 app.post("/api/get-categories", getCategories);
+app.post("/api/update-transaction", updateTransaction);
+app.post("/api/delete-transaction", deleteTransaction);
+app.post("/api/delete-category", deleteCategory);
 
 app.post("/api/logout", logout);
 

@@ -145,4 +145,94 @@ const addCategory = (req, res) => {
   });
 };
 
-module.exports = {getInitialUserData, getTransactions, getCategories, addTransaction, addCategory};
+const updateTransaction = (req, res) => {
+  const {
+    id,
+    email,
+    amount,
+    date,
+    type,
+    category,
+    description
+  } = req.body;
+
+  User.findOne({email}, function (err, user) {
+    if (err) {
+      internalServerError(res);
+    } else if (!user) {
+      invalidUserError(res);
+    } else {
+      Transaction.findById(id, (err, transaction) => {
+        if (err) {
+          internalServerError(res, "Unable to get transactions");
+        } else {
+          transaction.amount = amount;
+          transaction.date = new Date(date);
+          transaction.type = type;
+          transaction.category = category;
+          transaction.description = description;
+          transaction.save((err) => {
+            if (err) {
+              internalServerError(res, "Unable to get transactions");
+            } else {
+              res.sendStatus(200);
+            }
+          });
+        }
+      });
+
+      res.sendStatus(200);
+    }
+  });
+};
+
+const deleteTransaction = (req, res) => {
+  const {email, id} = req.body;
+
+  User.findOne({email}, function (err, user) {
+    if (err) {
+      internalServerError(res);
+    } else if (!user) {
+      invalidUserError(res);
+    } else {
+      Transaction.remove({_id: id}, (err, transaction) => {
+        if (err) {
+          internalServerError(res, "Unable to remove transactions");
+        } else {
+          res.sendStatus(200);
+        }
+      });
+    }
+  });
+};
+
+const deleteCategory = (req, res) => {
+  const {email, id} = req.body;
+
+  User.findOne({email}, function (err, user) {
+    if (err) {
+      internalServerError(res);
+    } else if (!user) {
+      invalidUserError(res);
+    } else {
+      Category.remove({_id: id}, (err, category) => {
+        if (err) {
+          internalServerError(res, "Unable to remove category");
+        } else {
+          res.sendStatus(200);
+        }
+      });
+    }
+  });
+};
+
+module.exports = {
+  getInitialUserData,
+  getTransactions,
+  getCategories,
+  addTransaction,
+  addCategory,
+  updateTransaction,
+  deleteTransaction,
+  deleteCategory
+};
