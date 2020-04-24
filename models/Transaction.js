@@ -6,7 +6,10 @@ const TransactionSchema = new mongoose.Schema({
   type: {type: String, required: true},
   category: {type: String, required: true},
   description: {type: String},
-  createdAt: {type: Date}
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 module.exports = mongoose.model('Transaction', TransactionSchema)

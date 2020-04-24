@@ -1,11 +1,9 @@
 import React, {useState} from "react";
-// import Select from 'react-select';
 import {useDispatch, useSelector} from "react-redux";
 import "../_override-react-date-picker.css";
 import "../transaction/TransactionPopup.css";
-// import DatePicker from 'react-date-picker';
+
 import {selectCategories, selectEmail, selectFilterDates} from "../../selectors/selectors";
-import styled from "styled-components";
 import {setEmail, setName, setTransactions} from "../../actions/actions";
 import {Button, DatePicker, Form, Input, InputNumber, Modal, Select} from "antd";
 import moment from "moment";
@@ -13,13 +11,11 @@ import {PlusOutlined} from "@ant-design/icons";
 
 const {Option} = Select;
 
-
 const TransactionPopup = () => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState();
   const [date, setDate] = useState(new Date());
   const [type, setType] = useState("income");
-
 
   const categories = useSelector(selectCategories);
   const email = useSelector(selectEmail);

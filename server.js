@@ -7,21 +7,12 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const Category = require('./models/Category');
 const Transaction = require('./models/Transaction');
-
 const withAuth = require('./middleware');
+const {internalServerError, invalidUserError, logger} = require("./Utils/utils");
 const secret = 'mysecretsshhh'; //take it from env
 
 const app = express();
 const port = process.env.PORT || 8080;
-
-const logger = function (req, res, next) {
-  console.log("URL:", req.url);
-  console.log("Method:", req.method);
-  console.log("Body:", req.body);
-  console.log("Cookie:", req.cookies);
-  console.log("-------------------------------------------------------------");
-  next();
-};
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
@@ -44,8 +35,7 @@ app.post('/api/signup', function (req, res) {
   const user = new User({name, email, password});
   user.save(function (err) {
     if (err) {
-      console.log(err);
-      res.status(500).send("Error registering new user please try again.");
+      internalServerError(res, "Error registering new user");
     } else {
       res.status(200).send("Registration successful");
     }
@@ -69,30 +59,16 @@ app.post('/api/authenticate', function (req, res) {
   const {email, password} = req.body;
   User.findOne({email}, function (err, user) {
     if (err) {
-      console.error(err);
-      res.status(500)
-        .json({
-          error: 'Internal error please try again'
-        });
+      internalServerError(res, "Unable to find user");
     } else if (!user) {
-      res.status(401)
-        .json({
-          error: 'Incorrect email or password'
-        });
+      invalidUserError(res);
     } else {
       user.isCorrectPassword(password, function (err, same) {
         if (err) {
-          res.status(500)
-            .json({
-              error: 'Internal error please try again'
-            });
+          internalServerError(res, "Password mis-matched");
         } else if (!same) {
-          res.status(401)
-            .json({
-              error: 'Incorrect email or password'
-            });
+          invalidUserError(res);
         } else {
-          // Issue token
           const payload = {email};
           const token = jwt.sign(payload, secret, {
             expiresIn: '1h'
@@ -109,73 +85,24 @@ app.post("/api/logout", function (req, res) {
   return res.sendStatus(200);
 });
 
-const createCategory = function (userId, category) {
-  return Category.create(category).then(docImage => {
-    return User.findByIdAndUpdate(
-      userId,
-      {
-        $push: {
-          categories: {
-            _id: docImage._id,
-            name: docImage.name,
-            type: docImage.type,
-            emoji: docImage.emoji,
-            createdAt: docImage.createdAt
-          }
-        }
-      },
-      {new: true, useFindAndModify: false}
-    );
-  });
-};
-
 app.post('/api/add-category', function (req, res) {
   const {type, name, emoji, email} = req.body;
   User.findOne({email}, function (err, user) {
     if (err) {
-      console.error(err);
-      res.status(500)
-        .json({
-          error: 'Internal error please try again'
-        });
+      internalServerError(res);
     } else if (!user) {
-      res.status(401)
-        .json({
-          error: 'Incorrect email or password'
-        });
+      invalidUserError(res);
     } else {
-      createCategory(user._id, {
+      Category.create({
         name: name,
         type: type,
         emoji: emoji,
-        createdAt: Date.now()
+        user: user
       });
       res.sendStatus(200);
     }
   });
 });
-
-const createTransaction = function (userId, transaction) {
-  return Transaction.create(transaction).then(docImage => {
-    return User.findByIdAndUpdate(
-      userId,
-      {
-        $push: {
-          transactions: {
-            _id: docImage._id,
-            amount: docImage.amount,
-            date: docImage.date,
-            type: docImage.type,
-            category: docImage.category,
-            description: docImage.description,
-            createdAt: docImage.createdAt
-          }
-        }
-      },
-      {new: true, useFindAndModify: false}
-    );
-  });
-};
 
 app.post('/api/add-transaction', function (req, res) {
   const {
@@ -189,24 +116,17 @@ app.post('/api/add-transaction', function (req, res) {
 
   User.findOne({email}, function (err, user) {
     if (err) {
-      console.error(err);
-      res.status(500)
-        .json({
-          error: 'Internal error please try again'
-        });
+      internalServerError(res);
     } else if (!user) {
-      res.status(401)
-        .json({
-          error: 'Incorrect email or password'
-        });
+      invalidUserError(res);
     } else {
-      createTransaction(user._id, {
+      Transaction.create({
         amount: amount,
         date: new Date(date),
         type: type,
         category: category,
         description: description,
-        createdAt: Date.now()
+        user: user
       });
       res.sendStatus(200);
     }
@@ -226,50 +146,37 @@ const getInitialUserData = (req, res) => {
     req.cookies.token;
 
   if (!token) {
-    res.status(401).send('Unauthorized: No token provided');
+    invalidUserError(res);
   } else {
     jwt.verify(token, secret, function (err, decoded) {
       if (err) {
-        res.status(401).send('Unauthorized: Invalid token');
-        return;
+        return invalidUserError(res);
       } else {
         email = decoded.email;
-
-        User.aggregate([
-          {$match: {email: email}},
-          {
-            "$project": {
-              "email": "$email",
-              "name": "$name",
-              "categories": "$categories",
-              "transactions": {
-                "$filter": {
-                  "input": "$transactions",
-                  "as": "transaction",
-                  "cond": {
-                    "$and": [
-                      {"$gte": ["$$transaction.date", startDate]},
-                      {"$lte": ["$$transaction.date", endDate]}
-                    ]
+        User.findOne({email}, function (err, user) {
+          if (err) {
+            internalServerError(res);
+          } else if (!user) {
+            invalidUserError(res);
+          } else {
+            Category.find({user: user._id}, function (err, category) {
+              if (!err) {
+                Transaction.find({
+                  user: user._id,
+                  date: {$gte: startDate, $lte: endDate}
+                }, function (err, transaction) {
+                  if (!err) {
+                    res.status(200).json({email, name: user.name, transactions: transaction, categories: category});
+                  } else {
+                    internalServerError(res, "unable to get transactions");
                   }
-                }
+                })
+              } else {
+                internalServerError(res, "Unable to get categories");
               }
-            }
+            })
           }
-        ]).exec((err, data) => {
-          if (err) throw err;
-          const e = email;
-          let name = data[0].name;
-          let transactions = data[0].transactions;
-          let categories = data[0].categories;
-          if (!data[0]) {
-            name = "User";
-            transactions = [];
-            categories = [];
-          }
-          res.status(200).json({email: e, name: name, transactions: transactions, categories: categories});
         });
-
       }
     });
   }
@@ -281,55 +188,47 @@ app.post("/api/get-initial-data", function (req, res) {
 
 app.post("/api/get-transactions", function (req, res) {
   const {email, startDate, endDate} = req.body;
-  User.aggregate([
-    {$match: {email: email}},
-    {
-      "$project": {
-        "email": "$email",
-        "name": "$name",
-        "transactions": {
-          "$filter": {
-            "input": "$transactions",
-            "as": "transaction",
-            "cond": {
-              "$and": [
-                {"$gte": ["$$transaction.date", new Date(startDate)]},
-                {"$lte": ["$$transaction.date", new Date(endDate)]}
-              ]
-            }
-          }
+  User.findOne({email}, function (err, user) {
+    if (err) {
+      internalServerError(res);
+    } else if (!user) {
+      invalidUserError(res);
+    } else {
+      Transaction.find({
+        user: user._id,
+        date: {$gte: startDate, $lte: endDate}
+      }, function (err, transactions) {
+        if (!err) {
+          res.status(200).json({email, name: user.name, transactions: transactions});
+        } else {
+          internalServerError(res, "Unable to get transactions");
         }
-      }
+      })
     }
-  ]).exec((err, data) => {
-    if (err) throw err;
-    const e = email;
-    const name = data[0].name || "User";
-    const transactions = data[0].transactions || [];
-    res.status(200).json({email: e, name: name, transactions: transactions});
   });
 });
-
 
 app.post("/api/get-categories", function (req, res) {
   const {email} = req.body;
-  User.aggregate([
-    {$match: {email: email}},
-    {
-      "$project": {
-        "email": "$email",
-        "name": "$name",
-        "categories": "$categories"
-      }
+  User.findOne({email}, function (err, user) {
+    if (err) {
+      internalServerError(res);
+    } else if (!user) {
+      invalidUserError(res);
+    } else {
+      Category.find({
+        user: user._id
+      }, function (err, categories) {
+        if (!err) {
+          res.status(200).json({email, name: user.name, categories});
+        } else {
+          internalServerError(res, "Unable to get categories");
+        }
+      })
     }
-  ]).exec((err, data) => {
-    if (err) throw err;
-    const e = email;
-    const name = data[0].name || "User";
-    const categories = data[0].categories || [];
-    res.status(200).json({email: e, name: name, categories: categories});
   });
 });
+
 app.get('/checkToken', withAuth, function (req, res) {
   res.sendStatus(200);
 });

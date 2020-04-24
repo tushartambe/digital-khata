@@ -48,20 +48,6 @@ const ChartArea = styled.section`
   justify-content:space-evenly;
 `;
 
-const LogoutButton = styled.button`
-  min-width:80px;
-  height:50%;
-  font-size:1rem;
-  
-  border-radius: 5px;
-  border: 2px solid black;
-  
-  background-color: #5eafff;
-  box-sizing: border-box;
-  cursor:pointer;
-  margin-left:5px;
-`;
-
 const Dashboard = (props) => {
   const name = useSelector(selectName);
   const [loading, setLoading] = useState(true);
@@ -69,7 +55,7 @@ const Dashboard = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch('/api/get-initial-data', {
+    loading && fetch('/api/get-initial-data', {
       method: 'POST',
       body: JSON.stringify({email}),
       headers: {
@@ -98,7 +84,6 @@ const Dashboard = (props) => {
       method: 'POST'
     })
       .then(res => {
-        console.log(res)
         if (res.status === 200) {
           props.history.push('/login');
         } else {
