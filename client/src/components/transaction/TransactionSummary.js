@@ -106,19 +106,6 @@ const TransactionSummary = (props) => {
 
   const columns = [
     {
-      title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
-      filters: [
-        {text: "Income", value: "income"},
-        {text: "Expense", value: "expense"}
-      ],
-      onFilter: (value, record) => record.type === value,
-      render: text => text === "income" ?
-        <Tag color="#6ca653"> <PlusCircleTwoTone twoToneColor={"#6ca653"}/> Income </Tag>
-        : <Tag color="#f56a00"> <MinusCircleTwoTone twoToneColor={'#f56a00'}/> Expense</Tag>
-    },
-    {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
@@ -169,7 +156,7 @@ const TransactionSummary = (props) => {
             }}
           />
           }
-          <EditTwoTone style={{fontSize: 22, marginRight: 16, cursor: "pointer"}}
+          <EditTwoTone style={{fontSize: 22, marginRight: 6, cursor: "pointer"}}
                        onClick={() => {
                          setId(record._id);
                          setVisible(!visible);
@@ -184,13 +171,28 @@ const TransactionSummary = (props) => {
       ),
     }];
 
+  if (window.innerWidth > 600) {
+    columns.unshift({
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+      filters: [
+        {text: "Income", value: "income"},
+        {text: "Expense", value: "expense"}
+      ],
+      onFilter: (value, record) => record.type === value,
+      render: text => text === "income" ?
+        <Tag color="#6ca653"> <PlusCircleTwoTone twoToneColor={"#6ca653"}/> Income </Tag>
+        : <Tag color="#f56a00"> <MinusCircleTwoTone twoToneColor={'#f56a00'}/> Expense</Tag>
+    });
+  }
   return (
     <div>
       <TransactionPopup/>
       <Table columns={columns}
-             expandable={{
+             expandable={window.innerWidth > 600 ? {
                expandedRowRender: record => <span><h4>Description : </h4>{record.description}</span>
-             }}
+             } : false}
              dataSource={transactions}
              pagination={false}
              size={"small"}

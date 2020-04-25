@@ -24,7 +24,9 @@ import {
   PoweroffOutlined,
   FilterOutlined
 } from '@ant-design/icons';
-import {Button, Layout, Menu, Space, Popover, Popconfirm, Typography, DatePicker} from 'antd';
+import {Button, Layout, Menu, Space, Popover, Popconfirm, Typography, DatePicker, Anchor} from 'antd';
+import AnchorLink from "antd/es/anchor/AnchorLink";
+import Summary from "../components/Summary";
 
 const {Title} = Typography;
 const {Header, Content, Footer, Sider} = Layout;
@@ -115,13 +117,14 @@ const Dashboard = (props) => {
   };
 
   const components = {
+    home: (<Summary/>),
     transactions: (<TransactionSummary/>),
     categories: (<CategoryList/>),
     lineChart: (<LineChart/>),
     pieChart: (<DoughnutChart/>)
   };
 
-  const [selectedActivity, setSelectedActivity] = useState();
+  const [selectedActivity, setSelectedActivity] = useState("home");
   const selelectActivity = ({item, key, keyPath, domEvent}) => {
     setSelectedActivity(key);
   };
@@ -181,7 +184,7 @@ const Dashboard = (props) => {
             console.log(collapsed, type);
           }}
         >
-          <Menu theme="dark" mode="inline" onClick={selelectActivity}>
+          <Menu theme="dark" mode="inline" onClick={selelectActivity} defaultSelectedKeys={["home"]}>
             <Menu.Item key="home">
               <HomeOutlined/>
               <span>Summary</span>
@@ -208,16 +211,13 @@ const Dashboard = (props) => {
         </Sider>
         <Content style={{margin: '10px 5px 0'}}>
           {components[selectedActivity]}
-          {/* <TransactionsMobile></TransactionsMobile> */}
-          {/*<Filters></Filters>*/}
-          {/*<Transactions></Transactions>*/}
-          {/* <DoughnutChart></DoughnutChart> */}
-          {/*<FloatButton></FloatButton>*/}
         </Content>
       </Layout>
       <Footer theme="dark" style={{textAlign: 'center', padding: "10px 10px"}}>
         <Space>
-          <Button type="primary" shape="circle" icon={<GithubFilled/>}/>
+          <a href={"https://github.com/tushartambe/digital-khata"} target="_blank">
+            <Button type="primary" shape="circle" icon={<GithubFilled/>}/>
+          </a>
           <Button type="primary" shape="circle" icon={<InstagramOutlined/>}/>
           <Button type="primary" shape="circle" icon={<FacebookFilled/>}/>
         </Space>
