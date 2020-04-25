@@ -8,8 +8,27 @@ import LineChart from "../components/charts/LineChart";
 import TransactionSummary from "../components/transaction/TransactionSummary";
 import CategoryList from "../components/category/CategoryList";
 import {setCategories, setEmail, setName, setTransactions} from "../actions/actions";
-import {PoweroffOutlined} from "@ant-design/icons";
-import {Button, Popconfirm} from "antd";
+// import {PoweroffOutlined} from "@ant-design/icons";
+// import {Button, Popconfirm} from "antd";
+
+import {
+  CheckSquareOutlined,
+  DatabaseOutlined,
+  FacebookFilled,
+  GithubFilled,
+  HomeOutlined,
+  InstagramOutlined,
+  LineChartOutlined,
+  PieChartOutlined,
+  UserOutlined,
+  PoweroffOutlined,
+  FilterOutlined
+} from '@ant-design/icons';
+import { Button, Layout, Menu, Space, Popover, Popconfirm, Typography, DatePicker } from 'antd';
+const { Title } = Typography;
+const { Header, Content, Footer, Sider } = Layout;
+
+// import "antd/dist/antd.css";
 
 const DashboardWrapper = styled.div`
   width:86%;
@@ -94,37 +113,99 @@ const Dashboard = (props) => {
     });
   };
 
-  return (
-    !loading &&
-    <DashboardWrapper>
-      <Heading>
-        <span>Hello {name}</span>
-        <Popconfirm
-          title="Do you really want to logout?"
-          icon={<PoweroffOutlined/>}
-          onConfirm={logout}
-          placement="bottomRight"
-          okText="Yes"
-          cancelText="No"
+  // return (
+  //   !loading &&
+  //   <DashboardWrapper>
+  //     <Heading>
+  //       <span>Hello {name}</span>
+  //       <Popconfirm
+  //         title="Do you really want to logout?"
+  //         icon={<PoweroffOutlined/>}
+  //         onConfirm={logout}
+  //         placement="bottomRight"
+  //         okText="Yes"
+  //         cancelText="No"
+  //       >
+  //         <Button
+  //           type="danger"
+  //           icon={<PoweroffOutlined/>}
+  //         >
+  //           Logout
+  //         </Button>
+  //       </Popconfirm>
+  //     </Heading>
+  //     <FilterTransactions/>
+  //     <Container>
+  //       <TransactionSummary/>
+  //       <ChartArea>
+  //         <LineChart/>
+  //         <DoughnutChart/>
+  //       </ChartArea>
+  //       <CategoryList/>
+  //     </Container>
+  //   </DashboardWrapper>
+  // )
+  return(
+    <Layout style={{ width: "100%", height: "100vh" }}>
+      <Header style={{ padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Title level={3} style={{ color: "white", margin: 0 }}> Digital Khata </Title>
+        <Popover placement="bottomRight" content={<div>
+          <p>Hello User</p>
+          <p><Button type="danger" icon={<PoweroffOutlined />} onClick={logout}>Logout</Button></p>
+        </div>} trigger="click">
+          <Button style={{background: "transparent"}} icon={<UserOutlined style={{color: "white"}}/>} shape={"circle"}/>
+        </Popover>
+      </Header>
+      <Layout>
+        <Sider
+          breakpoint="sm"
+          collapsedWidth="0"
+          onBreakpoint={broken => {
+            console.log(broken);
+          }}
+          onCollapse={(collapsed, type) => {
+            console.log(collapsed, type);
+          }}
         >
-          <Button
-            type="danger"
-            icon={<PoweroffOutlined/>}
-          >
-            Logout
-          </Button>
-        </Popconfirm>
-      </Heading>
-      <FilterTransactions/>
-      <Container>
-        <TransactionSummary/>
-        <ChartArea>
-          <LineChart/>
-          <DoughnutChart/>
-        </ChartArea>
-        <CategoryList/>
-      </Container>
-    </DashboardWrapper>
+          <Menu theme="dark" mode="inline">
+            <Menu.Item key="1" >
+              <HomeOutlined />
+              <span>Summary</span>
+            </Menu.Item>
+            <Menu.Item key="2">
+              <DatabaseOutlined />
+              <span >Transactions</span>
+            </Menu.Item>
+            <Menu.Item key="20">
+              <CheckSquareOutlined />
+              <span >Categories</span>
+            </Menu.Item>
+            <Menu.Item key="3">
+              <PieChartOutlined />
+              <span >Pie Chart</span>
+            </Menu.Item>
+            <Menu.Item key="4">
+              <LineChartOutlined />
+              <span >Line Chart</span>
+            </Menu.Item>
+          </Menu>
+        </Sider>
+        <Content style={{ margin: '10px 5px 0' }}>
+          {/* <TransactionsMobile></TransactionsMobile> */}
+          {/*<Filters></Filters>*/}
+          {/*<Transactions></Transactions>*/}
+          {/* <DoughnutChart></DoughnutChart> */}
+          {/*<FloatButton></FloatButton>*/}
+        </Content>
+      </Layout>
+      <Footer theme="dark" style={{ textAlign: 'center', padding: "10px 10px" }}>
+        <Space>
+          <Button type="primary" shape="circle" icon={<GithubFilled />} />
+          <Button type="primary" shape="circle" icon={<InstagramOutlined />} />
+          <Button type="primary" shape="circle" icon={<FacebookFilled />} />
+        </Space>
+      </Footer>
+    </Layout>
   )
 };
 
