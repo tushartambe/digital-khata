@@ -70,6 +70,7 @@ const TransactionSummary = (props) => {
     })
   };
 
+
   const addTransaction = ({id, date, amount, type, category, description}) => {
     fetch('/api/update-transaction', {
       method: 'POST',
@@ -96,6 +97,27 @@ const TransactionSummary = (props) => {
     });
   };
 
+  const deleteTransaction = (id) => {
+    fetch('/api/delete-transaction', {
+      method: 'POST',
+      body: JSON.stringify({
+        id,
+        email
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      if (res.status !== 200) {
+        throw new Error(res.error);
+      } else {
+        updateTransactions();
+      }
+    }).catch(err => {
+      alert('Error adding Transaction. Please try again.');
+    });
+  };
+  
   const onCreate = values => {
     console.log('Received values of form: ', values);
     console.log(id);
@@ -141,7 +163,10 @@ const TransactionSummary = (props) => {
                     setId(t._id);
                     setVisible(true);
                   }}/>,
-                  <DeleteTwoTone key="delete" twoToneColor="red"/>
+                  <DeleteTwoTone key="delete" twoToneColor="red" onClick={() => {
+                    // setId(t._id);
+                    deleteTransaction(t._id);
+                  }}/>
                 ]}>
                 <Meta
                   avatar={<Avatar size={64} style={styles[t.type]}>{t.amount}</Avatar>}
