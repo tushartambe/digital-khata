@@ -172,7 +172,7 @@ const Dashboard = (props) => {
       </Header>
       <Layout>
         <Sider
-          breakpoint="sm"
+          breakpoint="xs"
           collapsedWidth="0"
           onBreakpoint={broken => {
             console.log(broken);
@@ -198,10 +198,12 @@ const Dashboard = (props) => {
               <PieChartOutlined/>
               <span>Pie Chart</span>
             </Menu.Item>
+            {window.innerWidth > 600 &&
             <Menu.Item key="lineChart">
               <LineChartOutlined/>
               <span>Line Chart</span>
             </Menu.Item>
+            }
           </Menu>
         </Sider>
         <Content style={{margin: '10px 5px 0'}}>

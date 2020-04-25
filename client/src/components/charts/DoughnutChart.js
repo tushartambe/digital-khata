@@ -2,21 +2,11 @@ import styled from "styled-components";
 import React, {useState} from "react";
 import {Doughnut} from "react-chartjs-2";
 import {useSelector} from "react-redux";
-import {selectExpenses, selectIncome, selectUniqueExpenses, selectUniqueIncome} from "../../selectors/selectors";
+import {selectUniqueExpenses, selectUniqueIncome} from "../../selectors/selectors";
 import {Radio} from "antd";
 
-const ChartArea = styled.section`
-  width:100%;
-  height:50%;
-  display:flex;
-  flex-direction: column;
-  align-items:center;  
-  justify-content:center;
-  border-top:1px solid gray;
-`;
-
 const Wrap = styled.div`
-  width:50%;
+  margin:20px 0;
   display:flex;
   justify-content : space-evenly;
 `;
@@ -62,10 +52,14 @@ const DoughnutChart = (props) => {
     setCurrentCategory(event.target.value);
   };
   return (
-    <ChartArea>
+    <div>
       <Doughnut
+        width={null}
+        height={null}
         data={state}
         options={{
+          maintainAspectRatio: false ,
+          responsive: true,
           title: {
             display: true,
             text: toTitleCase(currentCategory),
@@ -78,12 +72,12 @@ const DoughnutChart = (props) => {
         }}
       />
       <Wrap>
-        <Radio.Group value={currentCategory}  buttonStyle="solid" onChange={toggle}>
-          <Radio.Button value="expense">Expense</Radio.Button>
-          <Radio.Button value="income">Income</Radio.Button>
+        <Radio.Group value={currentCategory} buttonStyle="solid" onChange={toggle} size="large">
+          <Radio.Button value="expense">Show Expense</Radio.Button>
+          <Radio.Button value="income">Show Income</Radio.Button>
         </Radio.Group>
       </Wrap>
-    </ChartArea>
+    </div>
   )
 };
 

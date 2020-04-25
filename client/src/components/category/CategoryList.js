@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setCategories} from "../../actions/actions";
 import {message, Table, Tag} from "antd";
 import {DeleteTwoTone, MinusCircleTwoTone, PlusCircleTwoTone} from '@ant-design/icons';
+import CategoryPopup from "./CategoryPopup";
 
 const CategoryList = (props) => {
   const categories = useSelector(selectCategories);
@@ -82,9 +83,14 @@ const CategoryList = (props) => {
                            deleteCategory(record._id);
                          }}/></span>),
     }];
-  return (<Table columns={columns}
-                 dataSource={categories}
-                 pagination={false}
-                 size={"middle"}/>);
+
+  return (
+    <div>
+      <CategoryPopup/>
+      <Table columns={columns}
+             dataSource={categories}
+             pagination={false}
+             size={"middle"}/>
+    </div>);
 };
 export default CategoryList;

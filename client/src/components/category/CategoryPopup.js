@@ -63,9 +63,15 @@ const CategoryPopup = ({history}) => {
 
   return (
     <div>
-      <Button type="primary" shape="circle" icon={<PlusOutlined/>} onClick={() => {
-        toggleModalShow(true)
-      }}/>
+      <Button style={{ position: "fixed", bottom: "10%", right: "10%", boxShadow: "2px 2px 2px #999" }}
+              type="primary"
+              shape="circle"
+              icon={<PlusOutlined />}
+              size={"large"}
+              onClick={() => {
+                toggleModalShow(true)
+              }}
+      />
       <Modal
         title="Add Category"
         visible={showModal}
