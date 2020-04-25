@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {selectCategories, selectEmail, selectFilterDates, selectTransactions} from "../../selectors/selectors";
 import TransactionPopup from "./TransactionPopup";
-import {Table} from "antd";
+import {Table, Tag} from "antd";
 import 'antd/dist/antd.css';
 import TransactionModalForm from "./TransactionModalForm";
 import {setEmail, setName, setTransactions} from "../../actions/actions";
@@ -114,8 +114,9 @@ const TransactionSummary = (props) => {
         {text: "Expense", value: "expense"}
       ],
       onFilter: (value, record) => record.type === value,
-      render: text => text === "income" ? <PlusCircleTwoTone twoToneColor={"#6ca653"} style={{fontSize: 28}}/> :
-        <MinusCircleTwoTone twoToneColor={'#f56a00'} style={{fontSize: 28}}/>
+      render: text => text === "income" ?
+        <Tag color="#6ca653"> <PlusCircleTwoTone twoToneColor={"#6ca653"}/> Income </Tag>
+        : <Tag color="#f56a00"> <MinusCircleTwoTone twoToneColor={'#f56a00'}/> Expense</Tag>
     },
     {
       title: 'Amount',
