@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import {selectCategories} from "../../selectors/selectors";
 
 const {Option} = Select;
+
 const TransactionModalForm = ({initialValues, visible, onCreate, onCancel}) => {
   const [form] = Form.useForm();
   const categories = useSelector(selectCategories);
@@ -19,7 +20,10 @@ const TransactionModalForm = ({initialValues, visible, onCreate, onCancel}) => {
       title={"Update"}
       okText={"Update"}
       cancelText="Cancel"
-      onCancel={onCancel}
+      onCancel={()=>{
+        onCancel();
+        form.resetFields();
+      }}
       onOk={() => {
         form
           .validateFields()

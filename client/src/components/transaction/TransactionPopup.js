@@ -81,9 +81,15 @@ const TransactionPopup = () => {
 
   return (
     <div>
-      <Button type="primary" shape="circle" icon={<PlusOutlined/>} onClick={() => {
-        toggleModalShow(true)
-      }}/>
+      <Button style={{ position: "fixed", bottom: "10%", right: "10%", boxShadow: "2px 2px 2px #999" }}
+              type="primary"
+              shape="circle"
+              icon={<PlusOutlined />}
+              size={"large"}
+              onClick={() => {
+                toggleModalShow(true)
+              }}
+      />
       <Modal
         title="Add Transaction"
         visible={showModal}
@@ -208,8 +214,8 @@ const TransactionPopup = () => {
               name="description"
             >
               <Input
-                onChange={(value) => {
-                  setDescription(value);
+                onChange={(event) => {
+                  setDescription(event.target.value);
                 }}
               />
             </Form.Item>

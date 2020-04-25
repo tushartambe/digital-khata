@@ -1,46 +1,17 @@
 import React, {useState} from 'react';
-import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {selectEmail, selectFilterDates, selectTransactions} from "../../selectors/selectors";
-import Header from "../Header";
+import {selectCategories, selectEmail, selectFilterDates, selectTransactions} from "../../selectors/selectors";
 import TransactionPopup from "./TransactionPopup";
-import {Avatar, Card} from "antd";
+import {Table} from "antd";
 import 'antd/dist/antd.css';
-import {DeleteTwoTone, EditTwoTone} from '@ant-design/icons';
 import TransactionModalForm from "./TransactionModalForm";
 import {setEmail, setName, setTransactions} from "../../actions/actions";
+import {DeleteTwoTone, EditTwoTone, MinusCircleTwoTone, PlusCircleTwoTone} from '@ant-design/icons';
 
-const {Meta} = Card;
-
-const ChartArea = styled.section`
-  width:30%;
-  height:100%;
-  
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  
-  border:3px solid blue;
-  overflow-y: auto;
-  box-sizing:border-box;
-`;
-
-const Transactions = styled.div`
-  width:100%;
-  height:100%;
-  overflow-y:scroll;
-  box-sizing:border-box;
-  padding: 5px;
-`;
 
 const TransactionSummary = (props) => {
   const transactions = useSelector(selectTransactions);
-  const styles = {
-    "income": {color: '#5f9249', backgroundColor: '#c3e8b4'},
-    "expense": {color: '#f56a00', backgroundColor: '#fde3cf'}
-  };
-
+  const categories = useSelector(selectCategories);
   const [visible, setVisible] = useState(false);
   const [id, setId] = useState();
   const email = useSelector(selectEmail);
@@ -117,7 +88,7 @@ const TransactionSummary = (props) => {
       alert('Error adding Transaction. Please try again.');
     });
   };
-  
+
   const onCreate = values => {
     console.log('Received values of form: ', values);
     console.log(id);
@@ -133,51 +104,96 @@ const TransactionSummary = (props) => {
     addTransaction(v);
   };
 
+  const columns = [
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+      filters: [
+        {text: "Income", value: "income"},
+        {text: "Expense", value: "expense"}
+      ],
+      onFilter: (value, record) => record.type === value,
+      render: text => text === "income" ? <PlusCircleTwoTone twoToneColor={"#6ca653"} style={{fontSize: 28}}/> :
+        <MinusCircleTwoTone twoToneColor={'#f56a00'} style={{fontSize: 28}}/>
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+      sorter: {
+        compare: (a, b) => a.amount - b.amount
+      },
+      render: text => <span>{text.toLocaleString('en-IN', {style: 'currency', currency: 'INR'})}</span>
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+      sorter: {
+        compare: (a, b) => new Date(a.date) - new Date(b.date)
+      },
+      render: (text, record) => (
+        <span>{new Date(text).toLocaleDateString("en-IN")}</span>
+      )
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
+      filters: categories.map(e => {
+        return {text: e.name, value: e.name}
+      }),
+      onFilter: (value, record) => record.category === value
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          {id === record._id &&
+          <TransactionModalForm
+            initialValues={{
+              amount: record.amount,
+              date: record.date,
+              type: record.type,
+              expenseCategory: record.type === "expense" ? record.category : undefined,
+              incomeCategory: record.type === "income" ? record.category : undefined,
+              description: record.description
+            }}
+            visible={visible}
+            onCreate={onCreate}
+            onCancel={() => {
+              setVisible(false);
+            }}
+          />
+          }
+          <EditTwoTone style={{fontSize: 22, marginRight: 16, cursor: "pointer"}}
+                       onClick={() => {
+                         setId(record._id);
+                         setVisible(!visible);
+                       }}
+          />
+          <DeleteTwoTone twoToneColor="red" style={{fontSize: 22, cursor: "pointer"}}
+                         onClick={() => {
+                           deleteTransaction(record._id)
+                         }}
+          />
+        </span>
+      ),
+    }];
+
   return (
-    <ChartArea>
-      <Transactions>
-        <Header>Transactions</Header>
-        <TransactionPopup/>
-        {transactions.map((t, i) =>
-          (<div>
-              {id === t._id && <TransactionModalForm
-                initialValues={{
-                  amount: t.amount,
-                  date: t.date,
-                  type: t.type,
-                  expenseCategory: t.type === "expense" ? t.category : undefined,
-                  incomeCategory: t.type === "income" ? t.category : undefined,
-                  description: t.description
-                }}
-                visible={visible}
-                onCreate={onCreate}
-                onCancel={() => {
-                  setVisible(false);
-                }}
-              />}
-              <Card
-                size="small"
-                style={{width: "100%", borderColor: "grey", marginBottom: "2px"}}
-                actions={[
-                  <EditTwoTone key="edit" onClick={() => {
-                    setId(t._id);
-                    setVisible(true);
-                  }}/>,
-                  <DeleteTwoTone key="delete" twoToneColor="red" onClick={() => {
-                    // setId(t._id);
-                    deleteTransaction(t._id);
-                  }}/>
-                ]}>
-                <Meta
-                  avatar={<Avatar size={64} style={styles[t.type]}>{t.amount}</Avatar>}
-                  title={t.category}
-                  description={new Date(t.date).toLocaleDateString("en-GB")}/>
-              </Card>
-            </div>
-          )
-        )}
-      </Transactions>
-    </ChartArea>
-  )
+    <div>
+      <TransactionPopup/>
+      <Table columns={columns}
+             expandable={{
+               expandedRowRender: record => <span><h4>Description : </h4>{record.description}</span>
+             }}
+             dataSource={transactions}
+             pagination={false}
+             size={"small"}
+      />
+    </div>)
 };
 export default TransactionSummary;

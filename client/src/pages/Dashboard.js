@@ -24,9 +24,10 @@ import {
   PoweroffOutlined,
   FilterOutlined
 } from '@ant-design/icons';
-import { Button, Layout, Menu, Space, Popover, Popconfirm, Typography, DatePicker } from 'antd';
-const { Title } = Typography;
-const { Header, Content, Footer, Sider } = Layout;
+import {Button, Layout, Menu, Space, Popover, Popconfirm, Typography, DatePicker} from 'antd';
+
+const {Title} = Typography;
+const {Header, Content, Footer, Sider} = Layout;
 
 // import "antd/dist/antd.css";
 
@@ -113,6 +114,18 @@ const Dashboard = (props) => {
     });
   };
 
+  const components = {
+    transactions: (<TransactionSummary/>),
+    categories: (<CategoryList/>),
+    lineChart: (<LineChart/>),
+    pieChart: (<DoughnutChart/>)
+  };
+
+  const [selectedActivity, setSelectedActivity] = useState();
+  const selelectActivity = ({item, key, keyPath, domEvent}) => {
+    setSelectedActivity(key);
+  };
+
   // return (
   //   !loading &&
   //   <DashboardWrapper>
@@ -145,13 +158,14 @@ const Dashboard = (props) => {
   //     </Container>
   //   </DashboardWrapper>
   // )
-  return(
-    <Layout style={{ width: "100%", height: "100vh" }}>
-      <Header style={{ padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <Title level={3} style={{ color: "white", margin: 0 }}> Digital Khata </Title>
+
+  return (
+    <Layout style={{width: "100%", height: "100vh"}}>
+      <Header style={{padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+        <Title level={3} style={{color: "white", margin: 0}}> Digital Khata </Title>
         <Popover placement="bottomRight" content={<div>
           <p>Hello User</p>
-          <p><Button type="danger" icon={<PoweroffOutlined />} onClick={logout}>Logout</Button></p>
+          <p><Button type="danger" icon={<PoweroffOutlined/>} onClick={logout}>Logout</Button></p>
         </div>} trigger="click">
           <Button style={{background: "transparent"}} icon={<UserOutlined style={{color: "white"}}/>} shape={"circle"}/>
         </Popover>
@@ -167,30 +181,31 @@ const Dashboard = (props) => {
             console.log(collapsed, type);
           }}
         >
-          <Menu theme="dark" mode="inline">
-            <Menu.Item key="1" >
-              <HomeOutlined />
+          <Menu theme="dark" mode="inline" onClick={selelectActivity}>
+            <Menu.Item key="home">
+              <HomeOutlined/>
               <span>Summary</span>
             </Menu.Item>
-            <Menu.Item key="2">
-              <DatabaseOutlined />
-              <span >Transactions</span>
+            <Menu.Item key="transactions">
+              <DatabaseOutlined/>
+              <span>Transactions</span>
             </Menu.Item>
-            <Menu.Item key="20">
-              <CheckSquareOutlined />
-              <span >Categories</span>
+            <Menu.Item key="categories">
+              <CheckSquareOutlined/>
+              <span>Categories</span>
             </Menu.Item>
-            <Menu.Item key="3">
-              <PieChartOutlined />
-              <span >Pie Chart</span>
+            <Menu.Item key="pieChart">
+              <PieChartOutlined/>
+              <span>Pie Chart</span>
             </Menu.Item>
-            <Menu.Item key="4">
-              <LineChartOutlined />
-              <span >Line Chart</span>
+            <Menu.Item key="lineChart">
+              <LineChartOutlined/>
+              <span>Line Chart</span>
             </Menu.Item>
           </Menu>
         </Sider>
-        <Content style={{ margin: '10px 5px 0' }}>
+        <Content style={{margin: '10px 5px 0'}}>
+          {components[selectedActivity]}
           {/* <TransactionsMobile></TransactionsMobile> */}
           {/*<Filters></Filters>*/}
           {/*<Transactions></Transactions>*/}
@@ -198,11 +213,11 @@ const Dashboard = (props) => {
           {/*<FloatButton></FloatButton>*/}
         </Content>
       </Layout>
-      <Footer theme="dark" style={{ textAlign: 'center', padding: "10px 10px" }}>
+      <Footer theme="dark" style={{textAlign: 'center', padding: "10px 10px"}}>
         <Space>
-          <Button type="primary" shape="circle" icon={<GithubFilled />} />
-          <Button type="primary" shape="circle" icon={<InstagramOutlined />} />
-          <Button type="primary" shape="circle" icon={<FacebookFilled />} />
+          <Button type="primary" shape="circle" icon={<GithubFilled/>}/>
+          <Button type="primary" shape="circle" icon={<InstagramOutlined/>}/>
+          <Button type="primary" shape="circle" icon={<FacebookFilled/>}/>
         </Space>
       </Footer>
     </Layout>
