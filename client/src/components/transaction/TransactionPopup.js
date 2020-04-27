@@ -5,9 +5,9 @@ import "../transaction/TransactionPopup.css";
 
 import {selectCategories, selectEmail, selectFilterDates} from "../../selectors/selectors";
 import {setEmail, setName, setTransactions} from "../../actions/actions";
-import {Button, DatePicker, Form, Input, InputNumber, Modal, Select} from "antd";
+import {DatePicker, Form, Input, InputNumber, Modal, Select} from "antd";
 import moment from "moment";
-import {PlusOutlined} from "@ant-design/icons";
+import FloatPlusButton from "../FloatPlusButton";
 
 const {Option} = Select;
 
@@ -81,15 +81,9 @@ const TransactionPopup = () => {
 
   return (
     <div>
-      <Button style={{ position: "fixed", bottom: "10%", right: "10%", boxShadow: "2px 2px 2px #999" }}
-              type="primary"
-              shape="circle"
-              icon={<PlusOutlined />}
-              size={"large"}
-              onClick={() => {
-                toggleModalShow(true)
-              }}
-      />
+      <FloatPlusButton onclick={() => {
+        toggleModalShow(true)
+      }}/>
       <Modal
         title="Add Transaction"
         visible={showModal}

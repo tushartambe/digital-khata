@@ -4,7 +4,7 @@ import {setCategories, setEmail, setName} from "../../actions/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {selectEmail} from "../../selectors/selectors";
 import {Button, Form, Input, Modal, Select, message} from "antd";
-import {PlusOutlined} from "@ant-design/icons";
+import FloatPlusButton from "../FloatPlusButton";
 
 const {Option} = Select;
 
@@ -63,15 +63,9 @@ const CategoryPopup = ({history}) => {
 
   return (
     <div>
-      <Button style={{ position: "fixed", bottom: "10%", right: "10%", boxShadow: "2px 2px 2px #999" }}
-              type="primary"
-              shape="circle"
-              icon={<PlusOutlined />}
-              size={"large"}
-              onClick={() => {
-                toggleModalShow(true)
-              }}
-      />
+      <FloatPlusButton onclick={() => {
+        toggleModalShow(true)
+      }}/>
       <Modal
         title="Add Category"
         visible={showModal}

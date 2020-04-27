@@ -1,77 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import styled from "styled-components";
-import {selectEmail, selectName} from "../selectors/selectors";
-import FilterTransactions from "../components/FilterTransactions";
+import {selectEmail} from "../selectors/selectors";
 import DoughnutChart from "../components/charts/DoughnutChart";
 import LineChart from "../components/charts/LineChart";
 import TransactionSummary from "../components/transaction/TransactionSummary";
 import CategoryList from "../components/category/CategoryList";
 import {setCategories, setEmail, setName, setTransactions} from "../actions/actions";
-// import {PoweroffOutlined} from "@ant-design/icons";
-// import {Button, Popconfirm} from "antd";
-
 import {
   CheckSquareOutlined,
   DatabaseOutlined,
-  FacebookFilled,
-  GithubFilled,
   HomeOutlined,
-  InstagramOutlined,
   LineChartOutlined,
-  PieChartOutlined,
-  UserOutlined,
-  PoweroffOutlined,
-  FilterOutlined
+  PieChartOutlined
 } from '@ant-design/icons';
-import {Button, Layout, Menu, Space, Popover, Popconfirm, Typography, DatePicker, Anchor} from 'antd';
-import AnchorLink from "antd/es/anchor/AnchorLink";
+import {Layout, Menu} from 'antd';
 import Summary from "../components/Summary";
+import {layoutStyle} from "../CommonStyles";
+import CommonFooter from "../components/CommonFooter";
+import CommonHeader from "../components/CommonHeader";
 
-const {Title} = Typography;
-const {Header, Content, Footer, Sider} = Layout;
-
-// import "antd/dist/antd.css";
-
-const DashboardWrapper = styled.div`
-  width:86%;
-  height:100%;
-  margin: 0 auto;
-`;
-
-const Heading = styled.section`
-  width:100%;
-  height:8%;
-  border:3px solid blue;
-  box-sizing:border-box;
-  font-size:30px;
-  padding:0 5%;
-  
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-`;
-
-const Container = styled.section`
-  width:100%;
-  height:84%;
-  border:3px solid blue;
-  box-sizing:border-box;
-  margin:0 auto;
-  display:flex;
-`;
-
-const ChartArea = styled.section`
-  width:50%;
-  height:100%;
-  display:flex;
-  flex-direction: column;
-  align-items:center;  
-  justify-content:space-evenly;
-`;
+const {Content, Sider} = Layout;
 
 const Dashboard = (props) => {
-  const name = useSelector(selectName);
   const [loading, setLoading] = useState(true);
   const email = useSelector(selectEmail);
   const dispatch = useDispatch();
@@ -125,54 +75,12 @@ const Dashboard = (props) => {
   };
 
   const [selectedActivity, setSelectedActivity] = useState("home");
-  const selelectActivity = ({item, key, keyPath, domEvent}) => {
+  const selectActivity = ({item, key, keyPath, domEvent}) => {
     setSelectedActivity(key);
   };
-
-  // return (
-  //   !loading &&
-  //   <DashboardWrapper>
-  //     <Heading>
-  //       <span>Hello {name}</span>
-  //       <Popconfirm
-  //         title="Do you really want to logout?"
-  //         icon={<PoweroffOutlined/>}
-  //         onConfirm={logout}
-  //         placement="bottomRight"
-  //         okText="Yes"
-  //         cancelText="No"
-  //       >
-  //         <Button
-  //           type="danger"
-  //           icon={<PoweroffOutlined/>}
-  //         >
-  //           Logout
-  //         </Button>
-  //       </Popconfirm>
-  //     </Heading>
-  //     <FilterTransactions/>
-  //     <Container>
-  //       <TransactionSummary/>
-  //       <ChartArea>
-  //         <LineChart/>
-  //         <DoughnutChart/>
-  //       </ChartArea>
-  //       <CategoryList/>
-  //     </Container>
-  //   </DashboardWrapper>
-  // )
-
   return (
-    <Layout style={{width: "100%", height: "100vh"}}>
-      <Header style={{padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-        <Title level={3} style={{color: "white", margin: 0}}> Digital Khata </Title>
-        <Popover placement="bottomRight" content={<div>
-          <p>Hello User</p>
-          <p><Button type="danger" icon={<PoweroffOutlined/>} onClick={logout}>Logout</Button></p>
-        </div>} trigger="click">
-          <Button style={{background: "transparent"}} icon={<UserOutlined style={{color: "white"}}/>} shape={"circle"}/>
-        </Popover>
-      </Header>
+    <Layout style={layoutStyle}>
+      <CommonHeader isLoggedIn={true} logout={logout}/>
       <Layout>
         <Sider
           breakpoint="xs"
@@ -184,7 +92,7 @@ const Dashboard = (props) => {
             console.log(collapsed, type);
           }}
         >
-          <Menu theme="dark" mode="inline" onClick={selelectActivity} defaultSelectedKeys={["home"]}>
+          <Menu theme="dark" mode="inline" onClick={selectActivity} defaultSelectedKeys={["home"]}>
             <Menu.Item key="home">
               <HomeOutlined/>
               <span>Summary</span>
@@ -213,15 +121,7 @@ const Dashboard = (props) => {
           {components[selectedActivity]}
         </Content>
       </Layout>
-      <Footer theme="dark" style={{textAlign: 'center', padding: "10px 10px"}}>
-        <Space>
-          <a href={"https://github.com/tushartambe/digital-khata"} target="_blank">
-            <Button type="primary" shape="circle" icon={<GithubFilled/>}/>
-          </a>
-          <Button type="primary" shape="circle" icon={<InstagramOutlined/>}/>
-          <Button type="primary" shape="circle" icon={<FacebookFilled/>}/>
-        </Space>
-      </Footer>
+      <CommonFooter/>
     </Layout>
   )
 };
