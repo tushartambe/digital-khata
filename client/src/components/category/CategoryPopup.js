@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import "../transaction/TransactionPopup.css"
 import {setCategories, setEmail, setName} from "../../actions/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {selectEmail} from "../../selectors/selectors";

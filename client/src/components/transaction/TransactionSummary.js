@@ -7,6 +7,7 @@ import 'antd/dist/antd.css';
 import TransactionModalForm from "./TransactionModalForm";
 import {setEmail, setName, setTransactions} from "../../actions/actions";
 import {DeleteTwoTone, EditTwoTone, MinusCircleTwoTone, PlusCircleTwoTone} from '@ant-design/icons';
+import Filters from "../Filters";
 
 
 const TransactionSummary = (props) => {
@@ -188,6 +189,7 @@ const TransactionSummary = (props) => {
   }
   return (
     <div>
+      <Filters/>
       <TransactionPopup/>
       <Table columns={columns}
              expandable={window.innerWidth > 600 ? {

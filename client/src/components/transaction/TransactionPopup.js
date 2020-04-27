@@ -1,8 +1,5 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import "../_override-react-date-picker.css";
-import "../transaction/TransactionPopup.css";
-
 import {selectCategories, selectEmail, selectFilterDates} from "../../selectors/selectors";
 import {setEmail, setName, setTransactions} from "../../actions/actions";
 import {DatePicker, Form, Input, InputNumber, Modal, Select} from "antd";
