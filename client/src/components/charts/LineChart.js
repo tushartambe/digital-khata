@@ -5,12 +5,7 @@ import {useSelector} from "react-redux";
 import {selectExpenses, selectIncome} from "../../selectors/selectors";
 
 const ChartArea = styled.section`
-  width:100%;
-  height:50%;
-  display:flex;
-  flex-direction: column;
-  align-items:center;  
-  justify-content:center;
+  margin:30px;
 `;
 
 const LineChart = () => {

@@ -45,3 +45,5 @@ export const selectUniqueIncome = state => {
   const income = selectIncome(state);
   return getUniqueData(income);
 };
+
+export const selectIsMobileScreen = state => state.isMobileScreen;

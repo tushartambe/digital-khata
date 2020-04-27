@@ -12,7 +12,8 @@ const initialState = {
     },
     transactions: []
   },
-  categories: []
+  categories: [],
+  isMobileScreen: (window.innerWidth < 600)
 };
 
 export default createStore(

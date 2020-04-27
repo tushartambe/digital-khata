@@ -1,4 +1,11 @@
-import {SET_CATEGORIES, SET_EMAIL, SET_FILTER, SET_NAME, SET_TRANSACTIONS} from "../actions/actions";
+import {
+  SET_CATEGORIES,
+  SET_EMAIL,
+  SET_FILTER,
+  SET_IS_MOBILE_SCREEN,
+  SET_NAME,
+  SET_TRANSACTIONS
+} from "../actions/actions";
 
 const initialState = {};
 
@@ -38,6 +45,12 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         categories: action.categories
+      };
+
+    case SET_IS_MOBILE_SCREEN:
+      return {
+        ...state,
+        isMobileScreen: action.isMobileScreen
       };
 
     default:

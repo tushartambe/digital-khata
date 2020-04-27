@@ -2,7 +2,7 @@ import {FilterOutlined} from '@ant-design/icons';
 import {Button, DatePicker, Form, Modal} from 'antd';
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {selectEmail, selectFilterDates} from "../selectors/selectors";
+import {selectEmail, selectFilterDates, selectIsMobileScreen} from "../selectors/selectors";
 import moment from "moment";
 import {setEmail, setFilter, setName, setTransactions} from "../actions/actions";
 
@@ -13,8 +13,9 @@ const Filters = () => {
   const [endDate, setEndDate] = useState(filterDates.endDate);
   const dispatch = useDispatch();
   const email = useSelector(selectEmail);
+  const isMobileScreen = useSelector(selectIsMobileScreen);
 
-  const layout = window.innerWidth > 600 ? "inline" : "";
+  const layout = !isMobileScreen ? "inline" : "";
 
   const updateFilters = (event) => {
     event.preventDefault();
@@ -93,7 +94,7 @@ const Filters = () => {
                         date && setEndDate(date._d);
                       }}/>
         </Form.Item>
-        {window.innerWidth > 600 && <Form.Item shouldUpdate={true}>
+        {!isMobileScreen && <Form.Item shouldUpdate={true}>
           {() => (
             <Button
               type="primary"
@@ -110,7 +111,7 @@ const Filters = () => {
   };
   return (
     <div style={{display: "flex", marginBottom: "10px"}}>
-      {window.innerWidth < 600 ? <Modal
+      {isMobileScreen? <Modal
         title="Apply Filters"
         visible={visible}
         onOk={(e) => {
@@ -122,8 +123,8 @@ const Filters = () => {
         }}
       >{formDom()}
       </Modal> : formDom()}
-      {window.innerWidth < 600 && <Button type="primary" onClick={(event) => {
-        setVisible(true)
+      {isMobileScreen && <Button type="primary" onClick={(event) => {
+        setVisible(true);
         updateFilters(event);
       }}>
         Apply Filter<FilterOutlined/>

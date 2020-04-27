@@ -3,6 +3,7 @@ export const SET_EMAIL = 'SET_EMAIL';
 export const SET_FILTER = "SET_FILTER";
 export const SET_CATEGORIES = "SET_CATEGORIES";
 export const SET_TRANSACTIONS = "SET_TRANSACTIONS";
+export const SET_IS_MOBILE_SCREEN = "SET_IS_MOBILE_SCREEN";
 
 export const setName = (name) => {
   return {
@@ -36,5 +37,12 @@ export const setTransactions = (transactions) => {
   return {
     type: SET_TRANSACTIONS,
     transactions
+  }
+};
+
+export const setIsMobileScreen = (isMobileScreen) => {
+  return {
+    type: SET_IS_MOBILE_SCREEN,
+    isMobileScreen
   }
 };

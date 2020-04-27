@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {selectEmail} from "../selectors/selectors";
+import {selectEmail, selectIsMobileScreen} from "../selectors/selectors";
 import DoughnutChart from "../components/charts/DoughnutChart";
 import LineChart from "../components/charts/LineChart";
 import TransactionSummary from "../components/transaction/TransactionSummary";
 import CategoryList from "../components/category/CategoryList";
-import {setCategories, setEmail, setName, setTransactions} from "../actions/actions";
+import {setCategories, setEmail, setIsMobileScreen, setName, setTransactions} from "../actions/actions";
 import {
   CheckSquareOutlined,
   DatabaseOutlined,
@@ -25,6 +25,11 @@ const Dashboard = (props) => {
   const [loading, setLoading] = useState(true);
   const email = useSelector(selectEmail);
   const dispatch = useDispatch();
+  const isMobileScreen = useSelector(selectIsMobileScreen);
+
+  window.addEventListener('resize', () => {
+    window.innerWidth < 600 ? dispatch(setIsMobileScreen(true)) : dispatch(setIsMobileScreen(false));
+  });
 
   useEffect(() => {
     loading && fetch('/api/get-initial-data', {
@@ -109,12 +114,10 @@ const Dashboard = (props) => {
               <PieChartOutlined/>
               <span>Pie Chart</span>
             </Menu.Item>
-            {window.innerWidth > 600 &&
-            <Menu.Item key="lineChart">
+            {!isMobileScreen && <Menu.Item key="lineChart">
               <LineChartOutlined/>
               <span>Line Chart</span>
-            </Menu.Item>
-            }
+            </Menu.Item>}
           </Menu>
         </Sider>
         <Content style={{margin: '10px 5px 0'}}>

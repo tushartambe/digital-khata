@@ -1,6 +1,12 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {selectCategories, selectEmail, selectFilterDates, selectTransactions} from "../../selectors/selectors";
+import {
+  selectCategories,
+  selectEmail,
+  selectFilterDates,
+  selectIsMobileScreen,
+  selectTransactions
+} from "../../selectors/selectors";
 import TransactionPopup from "./TransactionPopup";
 import {Table, Tag} from "antd";
 import 'antd/dist/antd.css';
@@ -18,6 +24,7 @@ const TransactionSummary = (props) => {
   const email = useSelector(selectEmail);
   const filterDates = useSelector(selectFilterDates);
   const dispatch = useDispatch();
+  const isMobileScreen = useSelector(selectIsMobileScreen);
 
   const updateTransactions = () => {
     fetch('/api/get-transactions', {
@@ -172,7 +179,7 @@ const TransactionSummary = (props) => {
       ),
     }];
 
-  if (window.innerWidth > 600) {
+  if (!isMobileScreen) {
     columns.unshift({
       title: 'Type',
       dataIndex: 'type',
@@ -187,12 +194,13 @@ const TransactionSummary = (props) => {
         : <Tag color="#f56a00"> <MinusCircleTwoTone twoToneColor={'#f56a00'}/> Expense</Tag>
     });
   }
+
   return (
     <div>
       <Filters/>
       <TransactionPopup/>
       <Table columns={columns}
-             expandable={window.innerWidth > 600 ? {
+             expandable={!isMobileScreen ? {
                expandedRowRender: record => <span><h4>Description : </h4>{record.description}</span>
              } : false}
              dataSource={transactions}
