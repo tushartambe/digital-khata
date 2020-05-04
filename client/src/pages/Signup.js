@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import Wrapper from "../components/Wrapper";
 import 'antd/dist/antd.css';
 import {LockTwoTone, MailTwoTone, SmileTwoTone} from '@ant-design/icons';
-import styled from "styled-components";
 import {Button, Form, Input, Layout, Typography} from "antd";
 import CommonFooter from "../components/CommonFooter";
 import CommonHeader from "../components/CommonHeader";
@@ -11,13 +10,6 @@ import {layoutStyle} from "../CommonStyles";
 
 const {Content} = Layout;
 const {Title} = Typography;
-
-const Container = styled.div`
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-`;
 
 const Signup = ({history}) => {
   const [email, setLocalEmail] = useState("");

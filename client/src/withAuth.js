@@ -12,12 +12,10 @@ const withAuth = (ComponentToProtect) => {
           if (res.status === 200) {
             setLoading(false);
           } else {
-            const error = new Error(res.error);
-            throw error;
+            throw new Error(res.error);
           }
         })
         .catch(err => {
-          console.error(err);
           setLoading(false);
           setRedirect(true);
         });

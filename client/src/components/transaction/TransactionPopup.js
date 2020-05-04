@@ -154,6 +154,7 @@ const TransactionPopup = () => {
                 value={type}
                 onChange={(value) => {
                   setType(value);
+                  setCategory(typeCategories[value][0]);
                 }}
               >
                 {types.map(type => (
