@@ -33,7 +33,7 @@ const mongo_uri = process.env.MONGODB_URI || 'mongodb://@ds143511.mlab.com:43511
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
-mongoose.connect(mongo_uri, {useNewUrlParser: true}, function (err) {
+mongoose.connect(mongo_uri, { useNewUrlParser: true }, function (err) {
   if (err) {
     throw err;
   } else {
@@ -41,14 +41,14 @@ mongoose.connect(mongo_uri, {useNewUrlParser: true}, function (err) {
   }
 });
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(logger);
 
 app.post('/api/signup', function (req, res) {
-  const {name, email, password} = req.body;
-  const user = new User({name, email, password});
+  const { name, email, password } = req.body;
+  const user = new User({ name, email, password });
   user.save(function (err) {
     if (err) {
       internalServerError(res, "Error registering new user");
@@ -64,7 +64,7 @@ app.get("/*", (req, res) => {
   res.sendFile(__dirname + "/client/build/index.html");
 });
 
-app.post('/api/authenticate',extractUserDetails, authenticate);
+app.post('/api/authenticate', extractUserDetails, authenticate);
 
 app.use(withAuth);
 app.use(extractUserDetails);
