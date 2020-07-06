@@ -1,19 +1,19 @@
-import {createStore} from 'redux';
+import { createStore } from "redux";
 import rootReducer from "../reducers/reducers";
 
 const date = new Date();
-const startDate = new Date(date.setDate(date.getDate() - 10));
+const startDate = new Date(date.setDate(date.getDate() - 30));
 
 const initialState = {
   transactions: {
     filter: {
       startDate: date,
-      endDate: new Date()
+      endDate: new Date(),
     },
-    transactions: []
+    transactions: [],
   },
   categories: [],
-  isMobileScreen: (window.innerWidth < 600)
+  isMobileScreen: window.innerWidth < 600,
 };
 
 export default createStore(

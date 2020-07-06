@@ -1,24 +1,29 @@
-const Category = require('../models/Category');
-const Transaction = require('../models/Transaction');
-const {internalServerError} = require("../utils/utils");
+const Category = require("../models/Category");
+const Transaction = require("../models/Transaction");
+const { internalServerError } = require("../utils/utils");
 
 const getInitialUserData = (req, res) => {
   const date = new Date();
-  const startDate = new Date(date.setDate(date.getDate() - 10));
-  const endDate = new Date();
-  let {email, user} = req.body;
-  Category.find({user: user._id}, function (err, category) {
+  let { email, user } = req.body;
+  Category.find({ user: user._id }, function (err, category) {
     if (!err) {
-      Transaction.find({
-        user: user._id,
-        date: {$gte: startDate, $lte: endDate}
-      }, function (err, transaction) {
-        if (!err) {
-          res.status(200).json({email, name: user.name, transactions: transaction, categories: category});
-        } else {
-          internalServerError(res, "unable to get transactions");
+      Transaction.find(
+        {
+          user: user._id,
+        },
+        function (err, transaction) {
+          if (!err) {
+            res.status(200).json({
+              email,
+              name: user.name,
+              transactions: transaction,
+              categories: category,
+            });
+          } else {
+            internalServerError(res, "unable to get transactions");
+          }
         }
-      })
+      );
     } else {
       internalServerError(res, "Unable to get categories");
     }
@@ -26,42 +31,43 @@ const getInitialUserData = (req, res) => {
 };
 
 const getTransactions = (req, res) => {
-  const {user, email, startDate, endDate} = req.body;
+  const { user, email, startDate, endDate } = req.body;
 
-  Transaction.find({
-    user: user._id,
-    date: {$gte: startDate, $lte: endDate}
-  }, function (err, transactions) {
-    if (!err) {
-      res.status(200).json({email, name: user.name, transactions: transactions});
-    } else {
-      internalServerError(res, "Unable to get transactions");
+  Transaction.find(
+    {
+      user: user._id,
+      date: { $gte: startDate, $lte: endDate },
+    },
+    function (err, transactions) {
+      if (!err) {
+        res
+          .status(200)
+          .json({ email, name: user.name, transactions: transactions });
+      } else {
+        internalServerError(res, "Unable to get transactions");
+      }
     }
-  })
+  );
 };
 
 const getCategories = (req, res) => {
-  const {email, user} = req.body;
-  Category.find({
-    user: user._id
-  }, function (err, categories) {
-    if (!err) {
-      res.status(200).json({email, name: user.name, categories});
-    } else {
-      internalServerError(res, "Unable to get categories");
+  const { email, user } = req.body;
+  Category.find(
+    {
+      user: user._id,
+    },
+    function (err, categories) {
+      if (!err) {
+        res.status(200).json({ email, name: user.name, categories });
+      } else {
+        internalServerError(res, "Unable to get categories");
+      }
     }
-  });
+  );
 };
 
 const addTransaction = (req, res) => {
-  const {
-    user,
-    amount,
-    date,
-    type,
-    category,
-    description
-  } = req.body;
+  const { user, amount, date, type, category, description } = req.body;
 
   Transaction.create({
     amount: amount,
@@ -69,31 +75,24 @@ const addTransaction = (req, res) => {
     type: type,
     category: category,
     description: description,
-    user: user
+    user: user,
   });
   res.sendStatus(200);
 };
 
 const addCategory = (req, res) => {
-  const {type, name, emoji, user} = req.body;
+  const { type, name, emoji, user } = req.body;
   Category.create({
     name: name,
     type: type,
     emoji: emoji,
-    user: user
+    user: user,
   });
   res.sendStatus(200);
 };
 
 const updateTransaction = (req, res) => {
-  const {
-    id,
-    amount,
-    date,
-    type,
-    category,
-    description
-  } = req.body;
+  const { id, amount, date, type, category, description } = req.body;
 
   Transaction.findById(id, (err, transaction) => {
     if (err) {
@@ -116,8 +115,8 @@ const updateTransaction = (req, res) => {
 };
 
 const deleteTransaction = (req, res) => {
-  const {id} = req.body;
-  Transaction.remove({_id: id}, (err, transaction) => {
+  const { id } = req.body;
+  Transaction.remove({ _id: id }, (err, transaction) => {
     if (err) {
       internalServerError(res, "Unable to remove transactions");
     } else {
@@ -127,8 +126,8 @@ const deleteTransaction = (req, res) => {
 };
 
 const deleteCategory = (req, res) => {
-  const {id} = req.body;
-  Category.remove({_id: id}, (err, category) => {
+  const { id } = req.body;
+  Category.remove({ _id: id }, (err, category) => {
     if (err) {
       internalServerError(res, "Unable to remove category");
     } else {
@@ -136,7 +135,6 @@ const deleteCategory = (req, res) => {
     }
   });
 };
-
 
 module.exports = {
   getInitialUserData,
@@ -146,5 +144,5 @@ module.exports = {
   addCategory,
   updateTransaction,
   deleteTransaction,
-  deleteCategory
+  deleteCategory,
 };
