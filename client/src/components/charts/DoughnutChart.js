@@ -1,14 +1,17 @@
 import styled from "styled-components";
-import React, {useState} from "react";
-import {Doughnut} from "react-chartjs-2";
-import {useSelector} from "react-redux";
-import {selectUniqueExpenses, selectUniqueIncome} from "../../selectors/selectors";
-import {Radio} from "antd";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  selectUniqueExpenses,
+  selectUniqueIncome,
+} from "../../selectors/selectors";
+import { Radio } from "antd";
+import ReactEcharts from "echarts-for-react";
 
 const Wrap = styled.div`
-  margin:20px 0;
-  display:flex;
-  justify-content : space-evenly;
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-evenly;
 `;
 
 const DoughnutChart = (props) => {
@@ -18,67 +21,75 @@ const DoughnutChart = (props) => {
   const [currentCategory, setCurrentCategory] = useState("expense");
   const [showExpense, setShowExpense] = useState(true);
 
-  const state = {
-    labels: showExpense ? uniqueExpenses.map(e => e.category) : uniqueIncome.map(e => e.category),
-    datasets: [
-      {
-        backgroundColor: [
-          '#B21F00',
-          '#C9DE00',
-          '#2FDE00',
-          '#00A6B4',
-          '#6800B4'
-        ],
-        hoverBackgroundColor: [
-          '#501800',
-          '#4B5000',
-          '#175000',
-          '#003350',
-          '#35014F'
-        ],
-        data: showExpense ? uniqueExpenses.map(e => e.amount) : uniqueIncome.map(e => e.amount)
-      }
-    ]
-  };
-
-  const toTitleCase = (title) => {
-    const FirstChar = title[0].toUpperCase();
-    const remaining = title.split("").splice(1);
-    return FirstChar + remaining.join("");
-  };
-
   const toggle = (event) => {
     setShowExpense(!showExpense);
     setCurrentCategory(event.target.value);
   };
+
+  let state = {
+    data: showExpense
+      ? uniqueExpenses.map((o) => {
+          return { value: o.amount, name: o.category };
+        })
+      : uniqueIncome.map((o) => {
+          return { value: o.amount, name: o.category };
+        }),
+    labels: showExpense
+      ? uniqueExpenses.map((e) => e.category)
+      : uniqueIncome.map((e) => e.category),
+  };
+
+  let option = {
+    tooltip: {
+      trigger: "item",
+      formatter: "{a} <br/>{b}: {c} ({d}%)",
+    },
+    legend: {
+      orient: "horizontal",
+      bottom: 5,
+      data: state.labels,
+    },
+    series: [
+      {
+        name: "Donut chart",
+        type: "pie",
+        radius: ["50%", "80%"],
+        avoidLabelOverlap: false,
+        label: {
+          show: false,
+          position: "center",
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: "30",
+            fontWeight: "bold",
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        data: state.data,
+      },
+    ],
+  };
+
   return (
     <div>
-      <Doughnut
-        width={null}
-        height={null}
-        data={state}
-        options={{
-          maintainAspectRatio: false ,
-          responsive: true,
-          title: {
-            display: true,
-            text: toTitleCase(currentCategory),
-            fontSize: 20
-          },
-          legend: {
-            display: true,
-            position: 'bottom'
-          }
-        }}
-      />
+      <ReactEcharts option={option} />
       <Wrap>
-        <Radio.Group value={currentCategory} buttonStyle="solid" onChange={toggle} size="large">
+        <Radio.Group
+          value={currentCategory}
+          buttonStyle="solid"
+          onChange={toggle}
+          size="large"
+        >
           <Radio.Button value="expense">Show Expense</Radio.Button>
           <Radio.Button value="income">Show Income</Radio.Button>
         </Radio.Group>
       </Wrap>
     </div>
-  )
+  );
 };
 
 export default DoughnutChart;
