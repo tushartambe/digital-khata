@@ -1,76 +1,84 @@
 import styled from "styled-components";
-import React from "react";
-import {Line} from "react-chartjs-2";
-import {useSelector} from "react-redux";
-import {selectExpenses, selectIncome} from "../../selectors/selectors";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectExpenses, selectIncome } from "../../selectors/selectors";
+import ReactEcharts from "echarts-for-react";
+import { Radio } from "antd";
 
-const ChartArea = styled.section`
-  margin:30px;
+const Wrap = styled.div`
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-evenly;
 `;
 
 const LineChart = () => {
   const expenses = useSelector(selectExpenses);
   const income = useSelector(selectIncome);
+  const [currentCategory, setCurrentCategory] = useState("expense");
+  const [showExpense, setShowExpense] = useState(true);
 
-  const state = {
-    datasets: [
-      {
-        label: 'Expenses',
-        fill: false,
-        lineTension: 0.5,
-        backgroundColor: 'rgba(75,192,192,1)',
-        borderColor: 'red',
-        borderWidth: 2,
-        data: expenses.map(o => ({x: o.date, y: o.amount}))
+  const toggle = (event) => {
+    setShowExpense(!showExpense);
+    setCurrentCategory(event.target.value);
+  };
+
+  let expenseDates = expenses.map((o) => new Date(o.date).toDateString());
+  let incomeDates = income.map((o) => new Date(o.date).toDateString());
+  let expenseData = expenses.map((o) => o.amount);
+  let incomeData = income.map((o) => o.amount);
+
+  let option = {
+    title: {
+      text: showExpense ? "Expenses" : "Income",
+      x: "center",
+    },
+    color: showExpense ? "#D53A35" : "#3398DB",
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
       },
+    },
+    xAxis: [
       {
-        label: 'Income',
-        fill: false,
-        lineTension: 0.5,
-        backgroundColor: 'red',
-        borderColor: 'green',
-        borderWidth: 2,
-        data: income.map(o => ({x: o.date, y: o.amount}))
-      }
-    ]
+        type: "category",
+        data: showExpense ? expenseDates : incomeDates,
+        axisTick: {
+          alignWithLabel: true,
+        },
+      },
+    ],
+    yAxis: [
+      {
+        type: "value",
+      },
+    ],
+    series: [
+      {
+        name: "Expenses",
+        type: "bar",
+        barWidth: "50%",
+        data: showExpense ? expenseData : incomeData,
+      },
+    ],
   };
 
   return (
-    <ChartArea>
-      <Line
-        data={state}
-        options={{
-          responsive: true,
-          title: {
-            display: true,
-            text: "Income vs Expense",
-            fontSize: 20
-          },
-          legend: {
-            display: true,
-            position: 'bottom'
-          },
-          scales: {
-            xAxes: [{
-              type: 'time',
-              time: {
-                unit: 'day',
-                tooltipFormat: 'MMM DD'
-              },
-              ticks: {
-                source: "auto"
-              }
-            }],
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }}
-      />
-    </ChartArea>
-  )
+    <div>
+      <ReactEcharts option={option}></ReactEcharts>
+      <Wrap>
+        <Radio.Group
+          value={currentCategory}
+          buttonStyle="solid"
+          onChange={toggle}
+          size="large"
+        >
+          <Radio.Button value="expense">Show Expense</Radio.Button>
+          <Radio.Button value="income">Show Income</Radio.Button>
+        </Radio.Group>
+      </Wrap>
+    </div>
+  );
 };
 
 export default LineChart;

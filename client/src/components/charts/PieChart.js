@@ -14,7 +14,7 @@ const Wrap = styled.div`
   justify-content: space-evenly;
 `;
 
-const DoughnutChart = (props) => {
+const PieChart = (props) => {
   const uniqueExpenses = useSelector(selectUniqueExpenses);
   const uniqueIncome = useSelector(selectUniqueIncome);
 
@@ -40,6 +40,10 @@ const DoughnutChart = (props) => {
   };
 
   let option = {
+    title: {
+      text: showExpense ? "Expenses" : "Income",
+      x: "center",
+    },
     tooltip: {
       trigger: "item",
       formatter: "{a} <br/>{b}: {c} ({d}%)",
@@ -51,23 +55,19 @@ const DoughnutChart = (props) => {
     },
     series: [
       {
-        name: "Donut chart",
+        name: "Pie Chart",
         type: "pie",
-        radius: ["50%", "80%"],
-        avoidLabelOverlap: false,
-        label: {
-          show: false,
-          position: "center",
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: "30",
-            fontWeight: "bold",
+        radius: "55%",
+        center: ["50%", "60%"],
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)",
           },
         },
         labelLine: {
-          show: false,
+          show: true,
         },
         data: state.data,
       },
@@ -92,4 +92,4 @@ const DoughnutChart = (props) => {
   );
 };
 
-export default DoughnutChart;
+export default PieChart;
