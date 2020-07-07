@@ -55,7 +55,7 @@ const LineChart = () => {
     ],
     series: [
       {
-        name: "Expenses",
+        name: showExpense ? "Expenses" : "Income",
         type: "bar",
         barWidth: "50%",
         data: showExpense ? expenseData : incomeData,
