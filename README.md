@@ -1,28 +1,29 @@
 ## Digital Khata
-**Simple  responsive web app to track expenses with simple data visualizations.**
+
+**Simple responsive web app to track expenses with simple data visualizations.**
 
 For demo visit the site by [Clicking here](https://digital-khata.herokuapp.com/)
 
 Login with
-      
-       email : tushartambe@gmail.com
-       password : demopassword
+  
+ email : demomail@gmail.com
+password : demopassword
 
 ## Images
 
+| Desktop                    |                              |
+| -------------------------- | ---------------------------- |
+| ![](./docs/Login.png)      | ![](./docs/Signup.png)       |
+| ![](./docs/Summary.png)    | ![](./docs/Transactions.png) |
+| ![](./docs/Categories.png) | ![](./docs/Pie.png)          |
 
-| Desktop |  |
-|---|--------|
-| ![](./docs/Login.png) | ![](./docs/Signup.png) |
-| ![](./docs/Summary.png) | ![](./docs/Transactions.png) |
-| ![](./docs/Categories.png) | ![](./docs/Pie.png) |
-
-| Mobile | | | 
-|---|----|----| 
-| ![](./docs/Login-mobile.png) | ![](./docs/Signup-mobile.png) | ![](./docs/Transactions-mobile.png) |
-| ![](./docs/Summary-mobile.png) | ![](./docs/Categories-mobile.png) | ![](./docs/Pie-mobile.png) |
+| Mobile                         |                                   |                                     |
+| ------------------------------ | --------------------------------- | ----------------------------------- |
+| ![](./docs/Login-mobile.png)   | ![](./docs/Signup-mobile.png)     | ![](./docs/Transactions-mobile.png) |
+| ![](./docs/Summary-mobile.png) | ![](./docs/Categories-mobile.png) | ![](./docs/Pie-mobile.png)          |
 
 ---
+
 ## To run this app on your local
 
 you must have mongo,nodejs and npm installed on your machine.
@@ -47,5 +48,4 @@ you must have mongo,nodejs and npm installed on your machine.
       npm install
       npm start
 
-#### Your frontend will be running at <localhost:3000/>. 
-
+#### Your frontend will be running at <localhost:3000/>.
