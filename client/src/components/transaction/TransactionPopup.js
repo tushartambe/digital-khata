@@ -1,12 +1,24 @@
-import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {selectCategories, selectEmail, selectFilterDates} from "../../selectors/selectors";
-import {setEmail, setName, setTransactions} from "../../actions/actions";
-import {DatePicker, Form, Input, InputNumber, Modal, Select} from "antd";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectCategories,
+  selectEmail,
+  selectFilterDates,
+} from "../../selectors/selectors";
+import { setEmail, setName, setTransactions } from "../../actions/actions";
+import {
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  message,
+} from "antd";
 import moment from "moment";
 import FloatPlusButton from "../FloatPlusButton";
 
-const {Option} = Select;
+const { Option } = Select;
 
 const TransactionPopup = () => {
   const [description, setDescription] = useState("");
@@ -19,68 +31,79 @@ const TransactionPopup = () => {
   const filterDates = useSelector(selectFilterDates);
   const dispatch = useDispatch();
 
-  const types = ['income', 'expense'];
+  const types = ["income", "expense"];
   const typeCategories = {
-    income: categories.filter(c => c.type === "income").map(c => c.name),
-    expense: categories.filter(c => c.type === "expense").map(c => c.name)
+    income: categories.filter((c) => c.type === "income").map((c) => c.name),
+    expense: categories.filter((c) => c.type === "expense").map((c) => c.name),
   };
   const [category, setCategory] = useState(typeCategories["income"][0]);
   const [showModal, toggleModalShow] = useState(false);
 
   const updateTransactions = () => {
-    fetch('/api/get-transactions', {
-      method: 'POST',
-      body: JSON.stringify({email: email, startDate: filterDates.startDate, endDate: filterDates.endDate}),
+    fetch("/api/get-transactions", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+        startDate: filterDates.startDate,
+        endDate: filterDates.endDate,
+      }),
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      if (res.status === 200) {
-      } else {
-        throw new Error(res.error);
-      }
-      return res.json();
-    }).then(res => {
-      dispatch(setName(res.name));
-      dispatch(setEmail(res.email));
-      dispatch(setTransactions(res.transactions));
-    }).catch(err => {
-      console.error(err);
-      alert('Some Error. Refresh the page');
+        "Content-Type": "application/json",
+      },
     })
+      .then((res) => {
+        if (res.status === 200) {
+        } else {
+          throw new Error(res.error);
+        }
+        return res.json();
+      })
+      .then((res) => {
+        dispatch(setName(res.name));
+        dispatch(setEmail(res.email));
+        dispatch(setTransactions(res.transactions));
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error("Some Error. Refresh the page");
+      });
   };
 
   const addTransaction = (event) => {
     event.preventDefault();
-    fetch('/api/add-transaction', {
-      method: 'POST',
+    fetch("/api/add-transaction", {
+      method: "POST",
       body: JSON.stringify({
         email: email,
         amount: amount,
         date: date,
         type: type,
         category: category,
-        description: description
+        description: description,
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      if (res.status !== 200) {
-        throw new Error(res.error);
-      } else {
-        updateTransactions();
-      }
-    }).catch(err => {
-      alert('Error adding Transaction. Please try again.');
-    });
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.status !== 200) {
+          throw new Error(res.error);
+        } else {
+          updateTransactions();
+        }
+      })
+      .catch((err) => {
+        message.error("Error adding Transaction. Please try again.");
+      });
   };
 
   return (
     <div>
-      <FloatPlusButton onclick={() => {
-        toggleModalShow(true)
-      }}/>
+      <FloatPlusButton
+        onclick={() => {
+          toggleModalShow(true);
+        }}
+      />
       <Modal
         title="Add Transaction"
         visible={showModal}
@@ -100,7 +123,7 @@ const TransactionPopup = () => {
               type: type,
               date: moment(date),
               incomeCategory: typeCategories["income"][0],
-              expenseCategory: typeCategories["expense"][0]
+              expenseCategory: typeCategories["expense"][0],
             }}
           >
             <Form.Item
@@ -109,12 +132,12 @@ const TransactionPopup = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Please enter amount!',
+                  message: "Please enter amount!",
                 },
               ]}
             >
               <InputNumber
-                style={{width: "100%"}}
+                style={{ width: "100%" }}
                 min={1}
                 onChange={(value) => {
                   setAmount(value);
@@ -128,15 +151,16 @@ const TransactionPopup = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Please select date!',
+                  message: "Please select date!",
                 },
               ]}
             >
               <DatePicker
-                style={{width: "100%"}}
+                style={{ width: "100%" }}
                 onChange={(d) => {
                   d && setDate(d._d);
-                }}/>
+                }}
+              />
             </Form.Item>
 
             <Form.Item
@@ -146,7 +170,7 @@ const TransactionPopup = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Please select type!',
+                  message: "Please select type!",
                 },
               ]}
             >
@@ -157,7 +181,7 @@ const TransactionPopup = () => {
                   setCategory(typeCategories[value][0]);
                 }}
               >
-                {types.map(type => (
+                {types.map((type) => (
                   <Option key={type}>{type}</Option>
                 ))}
               </Select>
@@ -165,46 +189,47 @@ const TransactionPopup = () => {
 
             <Form.Item
               noStyle
-              shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.type !== currentValues.type
+              }
             >
-              {({getFieldValue}) => {
-                return getFieldValue('type') === 'income' ? (
+              {({ getFieldValue }) => {
+                return getFieldValue("type") === "income" ? (
                   <Form.Item
                     name="incomeCategory"
                     label="Category"
-                    rules={[{required: true}]}
+                    rules={[{ required: true }]}
                   >
                     <Select
                       onChange={(value) => {
                         setCategory(value);
                       }}
                     >
-                      {typeCategories.income.map(c => (
+                      {typeCategories.income.map((c) => (
                         <Option key={c}>{c}</Option>
                       ))}
                     </Select>
                   </Form.Item>
-                ) : <Form.Item
-                  name="expenseCategory"
-                  label="Category"
-                  rules={[{required: true}]}
-                >
-                  <Select
-                    onChange={(value) => {
-                      setCategory(value);
-                    }}
+                ) : (
+                  <Form.Item
+                    name="expenseCategory"
+                    label="Category"
+                    rules={[{ required: true }]}
                   >
-                    {typeCategories.expense.map(c => (
-                      <Option key={c}>{c}</Option>
-                    ))}
-                  </Select>
-                </Form.Item>;
+                    <Select
+                      onChange={(value) => {
+                        setCategory(value);
+                      }}
+                    >
+                      {typeCategories.expense.map((c) => (
+                        <Option key={c}>{c}</Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                );
               }}
             </Form.Item>
-            <Form.Item
-              label="Description"
-              name="description"
-            >
+            <Form.Item label="Description" name="description">
               <Input
                 onChange={(event) => {
                   setDescription(event.target.value);
@@ -214,7 +239,8 @@ const TransactionPopup = () => {
           </Form>
         </div>
       </Modal>
-    </div>)
+    </div>
+  );
 };
 
 export default TransactionPopup;
